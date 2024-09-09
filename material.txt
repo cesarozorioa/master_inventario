@@ -1,0 +1,2 @@
+video de autenticacion de usuarios en django
+https://www.youtube.com/watch?v=Gr_QsOifaro&t=226s
