@@ -86,16 +86,19 @@ const IngresoProductos = () => {
     };
 
     const editarIngreso = (ingreso) => {
+        console.log("row data a editar: ", ingreso);
         setIsEditing(true);
-        setModalVisible(true);
+        productos.map(prod => {
+            if (prod.nombProd == ingreso.idProd_fk) {
+                setSelectedProducto(prod);
+            }
+        });
         setEditingIngreso(ingreso);
-        setSelectedProducto(ingreso.idProd_fk);
+        setModalVisible(true);
+        console.log("producto seleccionado para editar: ", selectedProducto);
         setCantidad(ingreso.cantIngreso);
-        setFechaIngreso(new Date (ingreso.fechaIngreso));       
-        
-        
+        setFechaIngreso(new Date(ingreso.fechaIngreso));
     };
-
     const eliminarIngreso = (ingresoId) => {
         
        
@@ -120,11 +123,12 @@ const IngresoProductos = () => {
             <div className="p-field">
                 <label htmlFor="producto">Producto</label>
                 <Dropdown 
-                value={selectedProducto} 
                 options={productos}
+                value={selectedProducto}                
                 itemTemplate={(nombre) => <div>{nombre.nombProd}</div>}
                 valueTemplate={(nombre) => {
                     if(nombre){
+
                         return <div>{nombre.nombProd}</div>
                     }
                     else{
@@ -174,6 +178,7 @@ const IngresoProductos = () => {
                     <RadioButton 
                         value="Materia Prima" 
                         name="tipoProducto" 
+                        //crear un endpoint para traer las materias primas
                         onChange={(e) => setTipoFiltro(e.value)} 
                         checked={tipoFiltro === 'Materia Prima'} 
                     />

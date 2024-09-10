@@ -116,7 +116,7 @@ const Categoria = () => {
         <InputText
           id="nombre"
           name="nombre"
-          value={categoria.nombre || ""}
+          value={categoria.nombre || categoria.nombCategoria || ""}
           onChange={(e) => setCategoria({ ...categoria, nombre: e.target.value })}
           required
           autoFocus

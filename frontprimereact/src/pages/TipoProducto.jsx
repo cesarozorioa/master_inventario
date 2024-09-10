@@ -112,7 +112,7 @@ const TipoProducto = () => {
         <InputText
           id="nombre"
           name="nombre"
-          value={producto.nombre || ""}
+          value={producto.nombre || producto.nombTipo ||""}
           onChange={(e) => setProducto({ ...producto, nombre: e.target.value })}
           required
           autoFocus

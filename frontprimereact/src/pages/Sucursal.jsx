@@ -119,7 +119,7 @@ const Sucursal = () => {
         <InputText
           id="nombre"
           name="nombre"
-          value={sucursal.nombre || ""}
+          value={sucursal.nombre || sucursal.nombSucursal || ""}
           onChange={(e) => setSucursal({ ...sucursal, nombre: e.target.value })}
           required
           autoFocus

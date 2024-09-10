@@ -119,7 +119,7 @@ const Distribuidor = () => {
         <InputText
           id="nombre"
           name="nombre"
-          value={distribuidor.nombre || ""}
+          value={distribuidor.nombre || distribuidor.nombProveedor || ""}
           onChange={(e) => setDistribuidor({ ...distribuidor, nombre: e.target.value })}
           required
           autoFocus
@@ -131,7 +131,7 @@ const Distribuidor = () => {
         <InputText
           id="telef"
           name="telef"
-          value={distribuidor.telef || ""}
+          value={distribuidor.telef || distribuidor.telefProveedor || ""}
           onChange={(e) => setDistribuidor({ ...distribuidor, telef: e.target.value })}
           required
           autoFocus
