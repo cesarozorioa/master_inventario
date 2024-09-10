@@ -51,7 +51,7 @@ class InventarioViewSet(viewsets.ModelViewSet):
     queryset = Inventario.objects.all()
 
 class IngresoViewSet(viewsets.ModelViewSet):
-    serializer_class = IngresoSerializer
+    serializer_class = IngresoSerializer    
     queryset = Ingreso.objects.all()
 
 class DespachoViewSet(viewsets.ModelViewSet):

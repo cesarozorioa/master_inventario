@@ -17,7 +17,7 @@ const Navbar = () => {
                 {
                     label: 'Entrada Productos',
                     icon: 'pi pi-bolt',
-                    command: () => {navigate('/ingresoproductos')},
+                    command: () => {navigate('/ingreso')},
 
                 },
                 {

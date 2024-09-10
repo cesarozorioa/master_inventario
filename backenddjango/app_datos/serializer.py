@@ -58,6 +58,15 @@ class InventarioSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IngresoSerializer(serializers.ModelSerializer):
+    #idProd_fk = ProductoSerializer()    
+    #idProd_fk = serializers.StringRelatedField()
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idProd_fk'] = instance.idProd_fk.nombProd
+        return rep
+
+
+
     class Meta:
         model = Ingreso
         fields = '__all__'
