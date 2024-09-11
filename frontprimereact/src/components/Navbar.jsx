@@ -27,7 +27,8 @@ const Navbar = () => {
                 {
                     label: 'Devoluciones',
                     icon: 'pi pi-pencil',
-                }
+                    command: () => {navigate('/devolucion')},
+                },
             ]
         },
         {

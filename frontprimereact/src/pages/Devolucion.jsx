@@ -8,18 +8,22 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
+import { InputText } from 'primereact/inputtext';
 import { Toolbar } from 'primereact/toolbar';
 import axios from 'axios';
 
-const IngresoProductos = () => {
+const Devolucion = () => {
     const [productos, setProductos] = useState([]);    
-    const [ingresos, setIngresos] = useState([]);
+    const [devoluciones, setDevoluciones] = useState([]);    
+    const [sucursales, setSucursales] = useState([]);
     const [selectedProducto, setSelectedProducto] = useState(null);
+    const [selectedSucursal, setSelectedSucursal] = useState(null);
     const [cantidad, setCantidad] = useState(null);
-    const [fechaIngreso, setFechaIngreso] = useState(new Date());
+    const [motivoDevolucion, setMotivoDevolucion] = useState(null);
+    const [fechaDevolucion, setFechaDevolucion] = useState(new Date());
     const [modalVisible, setModalVisible] = useState(false);
     const [tipoFiltro, setTipoFiltro] = useState(null); // Materia Prima, Producto Terminado, Producto Final
-    const [editingIngreso, setEditingIngreso] = useState(null);
+    const [editingDevolucion, setEditingDevolucion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [tiposProducto, setTiposProducto] = useState([]);
 
@@ -29,8 +33,8 @@ const IngresoProductos = () => {
             .then(response => setProductos(response.data))
             .catch(error => console.log(error));
 
-        axios.get('http://127.0.0.1:8000/api/v1/ingreso')
-            .then(response => setIngresos(response.data))
+        axios.get('http://127.0.0.1:8000/api/v1/devolucion')
+            .then(response => setDevoluciones(response.data))
             .catch(error => console.log(error));
             axios.get('http://127.0.0.1:8000/api/v1/tipo_producto/')
             .then(response => {
@@ -39,41 +43,44 @@ const IngresoProductos = () => {
             .catch(error => {
                 console.error('Error al obtener los tipos de producto:', error);
             });
+
+        axios.get('http://127.0.0.1:8000/api/v1/sucursal/')
+            .then(response => setSucursales(response.data))
+            .catch(error => console.log(error));
         
     }, []);
    
    
     // Filtrar ingresos por tipo de producto
-    const filtrarIngresos = () => {  
+    const filtrarDevoluciones = () => {  
              console.log("filtrando por tipo de producto: ",tipoFiltro)   
         if (tipoFiltro) {
-            return ingresos.filter(ingreso => ingreso.productos === tipoFiltro);
+            return devoluciones.filter(devolucion => devolucion.productos === tipoFiltro);
         }
-        return ingresos;
+        return devoluciones;
     };
 
     const abrirModal = () => {
         setModalVisible(true);
         setSelectedProducto(null);
         setCantidad(null);
-        setFechaIngreso(new Date());
+        setSelectedSucursal(null);        
+        setMotivoDevolucion(null);        
+        setFechaDevolucion(new Date());
     };
 
-    const guardarIngreso = () => {
-
+    const guardarDevolucion = () => {      
         
-        
-
-        const nuevoIngreso = { idProd_fk: selectedProducto.idProducto, cantIngreso:cantidad, fechaIngreso: fechaIngreso.toISOString().slice(0, 10) };
-        
+        const nuevoDevolucion = { idProd_fk: selectedProducto.idProducto, cantDevuelta:cantidad, idSuc_fk: selectedSucursal.idSucursal, fechaDevolucion: fechaDevolucion.toISOString().slice(0, 10), motivoDevolucion: motivoDevolucion };
+        console.log("nueva devolucion: ", nuevoDevolucion);
         if(isEditing){
-            axios.put(`http://127.0.0.1:8000/api/v1/ingreso/${editingIngreso.idIngreso}/`, nuevoIngreso)
+            axios.put(`http://127.0.0.1:8000/api/v1/devolucion/${editingDevolucion.idDevolucion}`, nuevoDevolucion)
                 .then(response => {
-                    setIngresos(ingresos.map(ingreso => {
-                        if (ingreso.idIngreso === editingIngreso.idIngreso) {
+                    setDevoluciones(devoluciones.map(devolucion => {
+                        if (devolucion.idDevolucion === editingDevolucion.idDevolucion) {
                             return response.data;
                         }
-                        return ingreso;
+                        return devolucion;
                     }));
                     setModalVisible(false);
                    
@@ -82,9 +89,9 @@ const IngresoProductos = () => {
                     console.error("Error en el servidor:", error.response.data);
                 });
         }else{
-            axios.post('http://127.0.0.1:8000/api/v1/ingreso/', nuevoIngreso)
+            axios.post('http://127.0.0.1:8000/api/v1/devolucion/',nuevoDevolucion)
             .then(response => {
-                setIngresos([...ingresos, response.data]);
+                setDevoluciones([...devoluciones, response.data]);
                 setModalVisible(false);
             })
             .catch(error => {
@@ -95,26 +102,26 @@ const IngresoProductos = () => {
         
     };
 
-    const editarIngreso = (ingreso) => {
-        console.log("row data a editar: ", ingreso);
+    const editarDevolucion = (devolucion) => {
+        console.log("row data a editar: ", devolucion);
         setIsEditing(true);
         productos.map(prod => {
-            if (prod.nombProd == ingreso.idProd_fk) {
+            if (prod.nombProd == devolucion.idProd_fk) {
                 setSelectedProducto(prod);
             }
         });
-        setEditingIngreso(ingreso);
+        setEditingDevolucion(devolucion);
         setModalVisible(true);
         console.log("producto seleccionado para editar: ", selectedProducto);
-        setCantidad(ingreso.cantIngreso);
-        setFechaIngreso(new Date(ingreso.fechaIngreso));
+        setCantidad(devolucion.cantDevolucion);
+        setFechaDevolucion(new Date(devolucion.fechaDevolucion));
     };
-    const eliminarIngreso = (ingresoId) => {
+    const eliminarDevolucion = (devolucionId) => {
         
        
-        axios.delete(`http://127.0.0.1:8000/api/v1/ingreso/${ingresoId}/`)
+        axios.delete(`http://127.0.0.1:8000/api/v1/devolucion/${devolucionId}/`)
             .then(() => {
-                setIngresos(ingresos.filter(ingreso => ingreso.idIngreso !== ingresoId));
+                setDevoluciones(devoluciones.filter(devolucion => devolucion.idDevolucion !== devolucionId));
             })
             .catch(error => {
                 console.error("Error al eliminar el ingreso:", error.response.data);
@@ -123,8 +130,8 @@ const IngresoProductos = () => {
 
     const accionPlantilla = (rowData) => (
         <React.Fragment>
-            <Button label="Editar" onClick={() => editarIngreso(rowData)} className="p-button-warning" />
-            <Button label="Eliminar" onClick={() => eliminarIngreso(rowData.idIngreso)} className="p-button-danger" />
+            <Button label="Editar" onClick={() => editarDevolucion(rowData)} className="p-button-warning" />
+            <Button label="Eliminar" onClick={() => eliminarDevolucion(rowData.idIngreso)} className="p-button-danger" />
         </React.Fragment>
     );
 
@@ -149,16 +156,46 @@ const IngresoProductos = () => {
                 setSelectedProducto(e.value)} 
                 placeholder="Seleccione Producto" 
                 optionLabel="nombre" />
+
+                <Dropdown 
+                options={sucursales}
+                value={selectedSucursal}                
+                itemTemplate={(nombre) => <div>{nombre.nombSucursal}</div>}
+                valueTemplate={(nombre) => {
+                    if(nombre){
+
+                        return <div>{nombre.nombSucursal}</div>
+                    }
+                    else{
+                        return <div>Seleccione Sucursal</div>
+                    }
+                }}
+                onChange={(e) => 
+                setSelectedSucursal(e.value)} 
+                placeholder="Seleccione Sucursal" 
+                optionLabel="nombre" />
+
             </div>
             <div className="p-field">
                 <label htmlFor="cantidad">Cantidad</label>
                 <InputNumber value={cantidad} onValueChange={(e) => setCantidad(e.value)} />
             </div>
             <div className="p-field">
-                <label htmlFor="fechaIngreso">Fecha de Ingreso</label>
-                <Calendar value={fechaIngreso} onChange={(e) => setFechaIngreso(e.value)} showIcon />
+                <label htmlFor="fechaIngreso">Fecha de Devolucion</label>
+                <Calendar value={fechaDevolucion} onChange={(e) => setFechaDevolucion(e.value)} showIcon />
             </div>
-            <Button label="Guardar" onClick={guardarIngreso} />
+            <div>
+                <label htmlFor="motivo">Motivo de Devolucion</label>
+                <InputText
+                 id="motivoDevolucion"
+                 name="motivoDevolucion"
+                 value={motivoDevolucion || ""} 
+                 onChange={(e) => setMotivoDevolucion(e.target.value)}
+                 />
+                 
+
+            </div>
+            <Button label="Guardar" onClick={guardarDevolucion} />
         </Dialog>
     );
 
@@ -166,7 +203,7 @@ const IngresoProductos = () => {
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <Button label="Nuevo Ingreso" icon="pi pi-plus" onClick={abrirModal} />
+                <Button label="Nueva Devolucion" icon="pi pi-plus" onClick={abrirModal} />
             </React.Fragment>
         );
     };
@@ -195,15 +232,17 @@ const IngresoProductos = () => {
         <div>
             <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
-            <DataTable value={filtrarIngresos()}>                
+            <DataTable value={filtrarDevoluciones()}>                
                 <Column field="idProd_fk" header="Producto" />           
-                <Column field="cantIngreso" header="Cantidad" />
-                <Column field="fechaIngreso" header="Fecha de Ingreso" />
+                <Column field="cantDevuelta" header="Cantidad" />
+                <Column field="fechaDevolucion" header="Fecha de Ingreso" />
+                <Column field="motivoDevolucion" header="Motivo" />
+                <Column field="idSuc_fk" header="Sucursal" />
                 <Column body={accionPlantilla} header="Acciones" />
             </DataTable>
 
             {renderModal()}
         </div>
     );
-};
-export default IngresoProductos;
+}
+export default Devolucion

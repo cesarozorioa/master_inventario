@@ -33,8 +33,7 @@ const Categoria = () => {
 
   const abrirDialogo = (editar = false, categoriaSeleccionado = { id: null, nombre: "" }) => {
     console.log(categoriaSeleccionado) 
-    setIsEditing(editar); 
-    /*setProducto({ ...producto, ...productoSeleccionado });*/
+    setIsEditing(editar);     
     setCategoria(categoriaSeleccionado);    
     setDialogVisible(true);
 

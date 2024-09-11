@@ -25,6 +25,8 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = '__all__'
         
 class ProductoSerializer(serializers.ModelSerializer):
+    idCategoria_fk = serializers.StringRelatedField()
+    idTipo_fk = serializers.StringRelatedField()
     class Meta:
         model = Producto
         fields = '__all__'
@@ -39,7 +41,13 @@ class Detalle_PedidoSerializer(serializers.ModelSerializer):
         model = Detalle_Pedido
         fields = '__all__'
 
-class DevolucionesSerializer(serializers.ModelSerializer):
+class DevolucionesSerializer(serializers.ModelSerializer):     #idSuc_fk = serializers.StringR
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idProd_fk'] = instance.idProd_fk.nombProd 
+        rep['idSuc_fk'] = instance.idSuc_fk.nombSucursal    
+        return rep   
+    
     class Meta:
         model = Devoluciones
         fields = '__all__'

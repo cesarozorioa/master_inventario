@@ -9,6 +9,7 @@ import Categoria from "../pages/Categoria";
 import Distribuidor from "../pages/Distribuidor";
 import ProductoManager from "../pages/ProductoManager";
 import IngresoProductos from "../pages/IngresoProductos";
+import Devolucion from "../pages/Devolucion";
 
 export const router = createBrowserRouter([
 {
@@ -51,7 +52,11 @@ export const router = createBrowserRouter([
         {
             path: "/ingreso",
             element : <IngresoProductos />,
-        },  
+        }, 
+        { 
+            path:"/devolucion",
+            element : <Devolucion />,
+        },
         
         {
             path: "*",
