@@ -20,10 +20,7 @@ const Navbar = () => {
                     command: () => {navigate('/ingreso')},
 
                 },
-                {
-                    label: 'Produccion',
-                    icon: 'pi pi-server',
-                },
+                
                 {
                     label: 'Devoluciones',
                     icon: 'pi pi-pencil',
@@ -32,18 +29,13 @@ const Navbar = () => {
             ]
         },
         {
-            label: 'Egresos',
-            icon: 'pi pi-search',
-            items: [
-                {
-                    label: 'Peidos',
-                    icon: 'pi pi-bolt',
-                },
-                {
-                    label: 'Produccion',
-                    icon: 'pi pi-server',
-                },
-            ]
+            label: 'Produccion',
+            icon: 'pi pi-server',
+            command: () => {navigate('/produccion')},
+        },
+        {
+            label: 'Pedidos',
+            icon: 'pi pi-server',
         },
         {
             label: 'Administracion  ',

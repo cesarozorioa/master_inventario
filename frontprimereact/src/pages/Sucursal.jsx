@@ -31,7 +31,7 @@ const Sucursal = () => {
   };
 
   const abrirDialogo = (editar = false, sucursalSeleccionado = { id: null, nombre: "", telef:"" }) => {
-    console.log(sucursalSeleccionado) 
+    
     setIsEditing(editar); 
     /*setProducto({ ...producto, ...productoSeleccionado });*/
     setSucursal(sucursalSeleccionado);    

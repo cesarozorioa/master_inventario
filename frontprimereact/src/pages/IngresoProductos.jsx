@@ -59,9 +59,7 @@ const IngresoProductos = () => {
         setFechaIngreso(new Date());
     };
 
-    const guardarIngreso = () => {
-
-        
+    const guardarIngreso = () => {       
         
 
         const nuevoIngreso = { idProd_fk: selectedProducto.idProducto, cantIngreso:cantidad, fechaIngreso: fechaIngreso.toISOString().slice(0, 10) };
@@ -104,8 +102,7 @@ const IngresoProductos = () => {
             }
         });
         setEditingIngreso(ingreso);
-        setModalVisible(true);
-        console.log("producto seleccionado para editar: ", selectedProducto);
+        setModalVisible(true);        
         setCantidad(ingreso.cantIngreso);
         setFechaIngreso(new Date(ingreso.fechaIngreso));
     };

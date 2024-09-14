@@ -24,9 +24,15 @@ class CategoriaSerializer(serializers.ModelSerializer):
         model = Categoria
         fields = '__all__'
         
-class ProductoSerializer(serializers.ModelSerializer):
-    idCategoria_fk = serializers.StringRelatedField()
-    idTipo_fk = serializers.StringRelatedField()
+class ProductoSerializer(serializers.ModelSerializer): 
+     
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idCategoria_fk'] = instance.idCategoria_fk.nombCategoria
+        rep['idTipo_fk'] = instance.idTipo_fk.nombTipo
+        rep['idProveedor_fk'] = instance.idProveedor_fk.nombProveedor
+        return rep
+     
     class Meta:
         model = Producto
         fields = '__all__'
@@ -53,10 +59,19 @@ class DevolucionesSerializer(serializers.ModelSerializer):     #idSuc_fk = seria
         fields = '__all__'
 
 class ProduccionSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idProd_fk'] = instance.idProd_fk.nombProd
+        return rep
     class Meta:
         model = Produccion
         fields = '__all__'
 class Detalle_ProduccionSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idMateriaPrima_fk'] = instance.idMateriaPrima_fk.nombProd
+        return rep
     class Meta:
         model = Detalle_Produccion
         fields = '__all__'

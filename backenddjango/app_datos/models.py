@@ -97,7 +97,7 @@ class Devoluciones(models.Model):
 
 class Produccion(models.Model):
     idProduccion = models.AutoField(primary_key=True)
-    idProdTerminado_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)    
+    idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)    
     cantProduccion = models.IntegerField(null=False,blank=False)
     fechaProduccion = models.DateField(null=False,blank=False)
     class Meta:        
@@ -107,7 +107,7 @@ class Produccion(models.Model):
 
 class Detalle_Produccion(models.Model):
     idDetalleProduccion = models.AutoField(primary_key=True)
-    idProd_fk = models.ForeignKey(Produccion, on_delete=models.CASCADE)
+    idProduccion_fk = models.ForeignKey(Produccion, on_delete=models.CASCADE)
     idMateriaPrima_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidadUsada = models.IntegerField(null=False,blank=False)
     class Meta:        

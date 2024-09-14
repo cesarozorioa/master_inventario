@@ -1,198 +1,253 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
 import axios from 'axios';
 
 const ProductoManager = () => {
-  const [productos, setProductos] = useState([]);
-  const [tipos, setTipos] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [proveedores, setProveedores] = useState([]);
-  const [form, setForm] = useState({
+  const [products, setProducts] = useState([]);
+  const [productDialog, setProductDialog] = useState(false);
+  const [product, setProduct] = useState({
     nombre: '',
-    tipoId: 0,
-    categoriaId: 0,
-    proveedorId: 0,
-    unidadMedida: '',
+    tipo_producto: null,
+    categoria: null,
+    proveedor: null,
+    unidad_medida: ''
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [productTypes, setProductTypes] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const toast = useRef(null);
 
-  // Cargar productos, tipos, categorías y proveedores
   useEffect(() => {
-    axios.get('http://127.0.0.1:8000/api/v1/producto/')
-      .then(response => setProductos(response.data))
-      .catch(error => console.error(error));
-
-    axios.get('http://127.0.0.1:8000/api/v1/tipo_producto/')
-      .then(response => setTipos(response.data))
-      .catch(error => console.error(error));
-
-    axios.get('http://127.0.0.1:8000/api/v1/categoria/')
-      .then(response => setCategorias(response.data))
-      .catch(error => console.error(error));
-
-    axios.get('http://127.0.0.1:8000/api/v1/proveedores/')
-      .then(response => setProveedores(response.data))
-      .catch(error => console.error(error));
+    fetchProducts();
+    fetchProductTypes();
+    fetchCategories();
+    fetchSuppliers();
   }, []);
-console.log(productos)
-  // Manejar cambio en los inputs del formulario
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  };
 
-  const fetchProductos = () => {
-    axios.get('http://127.0.0.1:8000/api/v1/producto/')
-      .then(response => {
-        setProductos(response.data); // Actualiza el estado con los productos más recientes
-      })
-      .catch(error => console.error('Error al obtener los productos:', error));
-  };
-
-  // Crear nuevo producto
-  const handleCreate = () => {
-    console.log('Datos a enviar:', form);
-    const dataToSend = {
-      nombProd: form.nombre,
-      idTipo_fk: form.tipoId,
-      idCategoria_fk: form.categoriaId,
-      idProveedor_fk: form.proveedorId,
-      unidadProducto: form.unidadMedida
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/producto/');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
-    
-    axios.post('http://127.0.0.1:8000/api/v1/producto/',dataToSend)
-      .then(response => {
-        setProductos([...productos, response.data]);
-        setForm({ nombre: '', tipoId: '', categoriaId: '', proveedorId: '', unidadMedida: '' });
-        fetchProductos();
-        //setIsEditing(false);
-        console.log(response.data);
-      })
-      .catch(error => console.error(error));
   };
 
-  // Editar producto
-  const handleEdit = (product) => {
+  const fetchProductTypes = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/tipo_producto/');
+      setProductTypes(response.data.map(type => ({ value: type.idTipo, label: type.nombTipo })));
+    } catch (error) {
+      console.error('Error fetching product types:', error);
+    }
+  };
+  console.log("productTypes: ",productTypes)
 
-    setForm({
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/categoria/');
+      setCategories(response.data.map(category => ({ value: category.idCategoria, label: category.nombCategoria })));
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/proveedores/');
+      setSuppliers(response.data.map(supplier => ({ value: supplier.idProveedor, label: supplier.nombProveedor })));
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
+    }
+  };
+
+  const openNew = () => {
+    setProduct({
+      nombre: '',
+      tipo_producto: null,
+      categoria: null,
+      proveedor: null,
+      unidad_medida: ''
+    });
+    setSubmitted(false);
+    setProductDialog(true);
+    setEditMode(false);
+  };
+
+  const hideDialog = () => {
+    setSubmitted(false);
+    setProductDialog(false);
+  };
+
+  const saveProduct = async () => {
+    setSubmitted(true);
+    
+    const nuevoProducto = {
+      nombProd: product.nombre,
+      idTipo_fk: product.tipo_producto,
+      idCategoria_fk: product.categoria,
+      idProveedor_fk: product.proveedor,
+      unidadProducto: product.unidad_medida
+    }
+    if (product.nombre.trim() && product.unidad_medida.trim()) {
+      try {
+        if (editMode) {
+          await axios.put(`http://127.0.0.1:8000/api/v1/producto/${product.id}/`, nuevoProducto);
+          toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Producto actualizado', life: 3000 });
+        } else {
+          await axios.post('http://127.0.0.1:8000/api/v1/producto/', nuevoProducto);
+          toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Producto creado', life: 3000 });
+        }
+        fetchProducts();
+        setProductDialog(false);
+        setProduct({          
+          nombre: '',
+          tipo_producto: null,
+          categoria: null,
+          proveedor: null,
+          unidad_medida: ''
+        });
+      } catch (error) {
+        console.error('Error saving product:', error);
+        toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al guardar el producto', life: 3000 });
+      }
+    }
+  };
+
+  const editProduct = (product) => {    
+    let tipo,cat,prov;
+    const { idTipo_fk: d1, idCategoria_fk: d2, idProveedor_fk: d3} = product;
+    productTypes.map((type) => {
+      if (type.label === d1) {        
+        tipo = type.value;
+      }
+    }) 
+
+    categories.map((category) => {
+      if (category.label === d2) {
+        cat = category.value;
+      }
+    })
+
+    suppliers.map((supplier) => {
+      if (supplier.label === d3) {
+        prov = supplier.value;
+      }
+    })
+    
+    setProduct({
+      id: product.idProducto,
       nombre: product.nombProd,
-      tipoId: product.idTipo_fk, // Convertir a entero el valor de product.idTipo_fk
-      categoriaId: product.idCategoria_fk, // Convertir a entero el valor de product.idCategoria_fk,
-      proveedorId: product.idProveedor_fk, // Convertir a entero el valor de product.idProveedor_fk,
-      unidadMedida: product.unidadProducto
-    });
-    setIsEditing(true);
-    setSelectedProductId(product.idProducto);
+      tipo_producto: tipo,       
+      categoria: cat,
+      proveedor: prov,
+      unidad_medida: product.unidadProducto
+    })   
+   
+    setProductDialog(true);
+    setEditMode(true);
   };
 
-  // Guardar cambios en el producto
-  const handleUpdate = () => {    
-    const dataToSend = {
-      nombProd: form.nombre,
-      idTipo_fk: form.tipoId,
-      idCategoria_fk: form.categoriaId,
-      idProveedor_fk: form.proveedorId,
-      unidadProducto: form.unidadMedida
+  const deleteProduct = async (product) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/v1/producto/${product.idProducto}/`);
+      fetchProducts();
+      toast.current.show({ severity: 'success', summary: 'Éxito', detail: 'Producto eliminado', life: 3000 });
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al eliminar el producto', life: 3000 });
     }
-    axios.put(`http://127.0.0.1:8000/api/v1/producto/${selectedProductId}/`, dataToSend)
-      .then(response => {
-        setProductos(productos.map(prod => (prod.idProducto === selectedProductId ? response.data : prod)));
-        setForm({ nombre: '', tipoId: '', categoriaId: '', proveedorId: '', unidadMedida: '' });
-        setIsEditing(false);
-        setSelectedProductId(null);
-      })
-      .catch(error => console.error(error));
   };
 
-  // Eliminar producto
-  const handleDelete = (id) => {
-    
-    axios.delete(`http://127.0.0.1:8000/api/v1/producto/${id}/`)
-      .then(() => {
-        setProductos(productos.filter(product => product.idProducto !== id));
-        
-      })
-      .catch(error => console.error(error));
+  const onInputChange = (e, name) => {
+    const val = (e.target && e.target.value) || '';
+    let _product = { ...product };
+    _product[name] = val;
+    setProduct(_product);
   };
+
+  const onDropdownChange = (e, name) => {
+    let _product = { ...product };
+    _product[name] = e.value;
+    setProduct(_product);
+  };
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
+        <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => deleteProduct(rowData)} />
+      </React.Fragment>
+    );
+  };
+
+  const productDialogFooter = (
+    <React.Fragment>
+      <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+      <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+    </React.Fragment>
+  );
+  
 
   return (
     <div>
-      <h2>Gestión de Productos</h2>
-      
-      <form>
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre del Producto"
-          value={form.nombre}
-          onChange={handleChange}
-        />
+      <Toast ref={toast} />
 
-        <select name="tipoId" value={form.tipoId} onChange={handleChange}>
-          <option value="">Seleccionar Tipo de Producto</option>
-          {tipos.map(tipo => (
-            <option key={tipo.idTipo} value={tipo.idTipo}>{tipo.nombTipo}</option>
-          ))}
-        </select>
+      <div className="card">
+        <h5>Gestión de Productos</h5>
+        <Button label="Nuevo Producto" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
 
-        <select name="categoriaId" value={form.categoriaId} onChange={handleChange}>
-          <option value="">Seleccionar Categoría</option>
-          {categorias.map(categoria => (
-            <option key={categoria.idCategoria} value={categoria.idCategoria}>{categoria.nombCategoria}</option>
-          ))}
-        </select>
+        <DataTable value={products} responsiveLayout="scroll">
+          <Column field="nombProd" header="Nombre"></Column>          
+          <Column field="idTipo_fk" header="Tipo de Producto" ></Column>
+          <Column field="idCategoria_fk" header="Categoría"></Column>
+          <Column field="idProveedor_fk" header="Proveedor"></Column>
+          <Column field="unidadProducto" header="Unidad de Medida"></Column>
+          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
+        </DataTable>
+      </div>
 
-        <select name="proveedorId" value={form.proveedorId} onChange={handleChange}>
-          <option value="">Seleccionar Proveedor</option>
-          {proveedores.map(proveedor => (
-            <option key={proveedor.idProveedor} value={proveedor.idProveedor}>{proveedor.nombProveedor}</option>
-          ))}
-        </select>
-        <input
-          type="text"
-          name="unidadMedida"
-          placeholder="Unidad de Medida"
-          value={form.unidadMedida}
-          onChange={handleChange} 
-        />
-
-        <button type="button" onClick={isEditing ? handleUpdate : handleCreate}>
-          {isEditing ? 'Actualizar Producto' : 'Crear Producto'}
-        </button>
-        
-      </form>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Categoría</th>
-            <th>Proveedor</th>
-            <th>Unidad de Medida</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {productos.map(product => (
-            <tr key={product.idProducto}>
-              <td>{product.nombProd}</td>              
-              <td>{tipos.find(tipo => tipo.idTipo === product.idTipo_fk)?.nombTipo}</td>
-              <td>{categorias.find(categoria => categoria.idCategoria === product.idCategoria_fk)?.nombCategoria}</td>
-              <td>{proveedores.find(proveedor => proveedor.idProveedor === product.idProveedor_fk)?.nombProveedor}</td>
-              <td>{product.unidadProducto}</td>
-              <td>
-                <button onClick={() => handleEdit(product)}>Editar</button>
-                <button onClick={() => handleDelete(product.idProducto)}>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <Dialog visible={productDialog} style={{ width: '450px' }} header="Detalles del Producto" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+        <div className="field">
+          <label htmlFor="nombre">Nombre</label>
+          <InputText id="nombre" value={product.nombre || ''} onChange={(e) => onInputChange(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.nombre })} />
+          {submitted && !product.nombre && <small className="p-error">El nombre es requerido.</small>}
+        </div>
+        <div className="field">
+          <label htmlFor="tipo_producto">Tipo de Producto</label>
+          <Dropdown id="tipo_producto" value={product.tipo_producto}          
+          options={productTypes}        
+          optionLabel='label'
+          onChange={(e) => onDropdownChange(e, 'tipo_producto')} placeholder="Seleccione un tipo de producto"
+           />
+        </div>
+        <div className="field">
+          <label htmlFor="categoria">Categoría</label>
+          <Dropdown id="categoria" value={product.categoria || product.label || ''} 
+          options={categories}          
+          optionLabel='label'
+          onChange={(e) => onDropdownChange(e, 'categoria')} placeholder="Seleccione una categoría" />
+        </div>
+        <div className="field">
+          <label htmlFor="proveedor">Proveedor</label>
+          <Dropdown id="proveedor" value={product.proveedor} options={suppliers} onChange={(e) => onDropdownChange(e, 'proveedor')} placeholder="Seleccione un proveedor" />
+        </div>
+        <div className="field">
+          <label htmlFor="unidad_medida">Unidad de Medida</label>
+          <InputText id="unidad_medida" value={product.unidad_medida} onChange={(e) => onInputChange(e, 'unidad_medida')} required className={classNames({ 'p-invalid': submitted && !product.unidad_medida })} />
+          {submitted && !product.unidad_medida && <small className="p-error">La unidad de medida es requerida.</small>}
+        </div>
+      </Dialog>
     </div>
   );
-};
-
-export default ProductoManager;
+}
+export default ProductoManager

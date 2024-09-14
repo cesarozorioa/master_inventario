@@ -74,7 +74,7 @@ const Devolucion = () => {
         const nuevoDevolucion = { idProd_fk: selectedProducto.idProducto, cantDevuelta:cantidad, idSuc_fk: selectedSucursal.idSucursal, fechaDevolucion: fechaDevolucion.toISOString().slice(0, 10), motivoDevolucion: motivoDevolucion };
         console.log("nueva devolucion: ", nuevoDevolucion);
         if(isEditing){
-            axios.put(`http://127.0.0.1:8000/api/v1/devolucion/${editingDevolucion.idDevolucion}`, nuevoDevolucion)
+            axios.put(`http://127.0.0.1:8000/api/v1/devolucion/${editingDevolucion.idDevolucion}/`,nuevoDevolucion)
                 .then(response => {
                     setDevoluciones(devoluciones.map(devolucion => {
                         if (devolucion.idDevolucion === editingDevolucion.idDevolucion) {
