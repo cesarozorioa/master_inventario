@@ -50,8 +50,7 @@ const Produccion = () => {
     try {      
       
       const response = await axios.get(`http://127.0.0.1:8000/api/v1/detalle_produccion/?idProduccion_fk=${productionId}`);
-      setProductionDetails(response.data);  
-      console.log("productions Detail ok ok s: ", productionDetails);    
+      setProductionDetails(response.data);        
     } catch (error) {
       console.error('Error fetching production details:', error);
       
@@ -86,19 +85,22 @@ const Produccion = () => {
   };
 
   const saveProductionDetail = async () => {
-   
+    console.log("newDetail1 en saveProductionDetail: ",newDetail );
+    const { id:idDetalle } = newDetail;
     const { idProduccion: productionId } = selectedProduction;
     const newDetail1 = {
+      id:idDetalle,
       idProduccion_fk:productionId,
       cantidadUsada: newDetail.quantity,
       idMateriaPrima_fk:newDetail.product.idProducto
     }
-    
+   
     try {
       console.log("newDetail1: xxxx ", newDetail1);
-      if (newDetail.idProduccion_fk) {
-        await axios.put(`http://127.0.0.1:8000/api/v1/detalle_produccion/${newDetail.idProduccion}/`, newDetail1);
+      if (newDetail.id) {
+        await axios.put(`http://127.0.0.1:8000/api/v1/detalle_produccion/${newDetail.id}/`, newDetail1);
       } else {
+        
         await axios.post('http://127.0.0.1:8000/api/v1/detalle_produccion/', newDetail1);
       }
       fetchProductionDetails(selectedProduction.idProduccion);
@@ -125,9 +127,10 @@ const Produccion = () => {
   };
 
   const deleteProductionDetail = async (detail) => {
+    console.log("en delete el detalle: ", detail)
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/v1/detalle_produccion/${detail.idProduccion}/`);
-      fetchProductionDetails(selectedProduction.idProd_fk);
+      await axios.delete(`http://127.0.0.1:8000/api/v1/detalle_produccion/${detail.idDetalleProduccion}/`);
+      fetchProductionDetails(selectedProduction.idProduccion);
       toast.current.show({ severity: 'success', summary: 'Success', detail: 'Production detail deleted', life: 3000 });
     } catch (error) {
       console.error('Error deleting production detail:', error);
@@ -170,13 +173,17 @@ const Produccion = () => {
   };
 
   const editProductionDetail = (detail) => {
+    
+   
     setNewDetail({
-      id: detail.id,
-      production: detail.production,
-      product: detail.product.id,
-      quantity: detail.quantity
+      id: detail.idDetalleProduccion,
+      production: detail.idProduccion_fk,
+      product: detail.idMateriaPrima_fk,
+      quantity: detail.cantidadUsada
     });
+    
     setDetailDialog(true);
+    
   };
   const actionBodyTemplate = (rowData) => {
     return (
@@ -268,7 +275,7 @@ const Produccion = () => {
         <div className="field">
           <label htmlFor="product">Product Used</label>
           <Dropdown id="product" 
-          value={newDetail.product}       
+          value={newDetail.product || newDetail.nombProd}       
           itemTemplate={(name) => <div>{name.nombProd}</div>}
           valueTemplate={(name) => {
             if(name){
