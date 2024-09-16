@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',    
     "corsheaders",
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',   
     'app_datos',
@@ -133,6 +134,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 
 

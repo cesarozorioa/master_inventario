@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django_filters import rest_framework as filters
 from .models import *
 
 class Tipo_ProductoSerializer(serializers.ModelSerializer):
@@ -42,10 +43,13 @@ class PedidoSerializer(serializers.ModelSerializer):
         model = Pedido
         fields = '__all__'
 
+
 class Detalle_PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Detalle_Pedido
         fields = '__all__'
+        
+
 
 class DevolucionesSerializer(serializers.ModelSerializer):     #idSuc_fk = serializers.StringR
     def to_representation(self, instance):
@@ -67,7 +71,17 @@ class ProduccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Produccion
         fields = '__all__'
+
+
+class Detalle_ProduccionFilter(filters.FilterSet):
+   # name = filters.CharFilter(lookup_expr='exact')
+
+    class Meta:
+        model = Detalle_Produccion
+        fields = ['idProduccion_fk']
+    
 class Detalle_ProduccionSerializer(serializers.ModelSerializer):
+   # name = serializers.CharField(source='idProduccion_fk')
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         rep['idMateriaPrima_fk'] = instance.idMateriaPrima_fk.nombProd
@@ -75,6 +89,8 @@ class Detalle_ProduccionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Detalle_Produccion
         fields = '__all__'
+        filterset_class = Detalle_ProduccionFilter
+        
 class InventarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventario
@@ -87,8 +103,6 @@ class IngresoSerializer(serializers.ModelSerializer):
         rep = super().to_representation(instance)
         rep['idProd_fk'] = instance.idProd_fk.nombProd
         return rep
-
-
 
     class Meta:
         model = Ingreso

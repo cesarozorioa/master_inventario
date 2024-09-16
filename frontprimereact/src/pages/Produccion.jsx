@@ -44,24 +44,27 @@ const Produccion = () => {
   };
 
   const fetchProductionDetails = async (productionId) => {
-    console.log("productionId xxx: ", productionId);
+    console.log("productionId ????: ", productionId);
+    console.log("newDetail: ", newDetail);
     
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/detalle_produccion/?production=${productionId}/`);
-      setProductionDetails(response.data);      
+    try {      
+      
+      const response = await axios.get(`http://127.0.0.1:8000/api/v1/detalle_produccion/?idProduccion_fk=${productionId}`);
+      setProductionDetails(response.data);  
+      console.log("productions Detail ok ok s: ", productionDetails);    
     } catch (error) {
       console.error('Error fetching production details:', error);
       
     }
     
   };
- 
+  //console.log("productions Details:xxxxxx ", productionDetails);
   
 
   const saveProduction = async () => {
     
     const newProduction1 = {
-      idProdTerminado_fk:newProduction.product.idProducto,
+      idProd_fk:newProduction.product.idProducto,
       fechaProduccion: newProduction.production_date,
       cantProduccion: newProduction.quantity
     }
@@ -83,16 +86,17 @@ const Produccion = () => {
   };
 
   const saveProductionDetail = async () => {
-    console.log("newDetail: ", newDetail);
+   
+    const { idProduccion: productionId } = selectedProduction;
     const newDetail1 = {
-      idProdu_fk:selectProduction.idProduccion,
+      idProduccion_fk:productionId,
       cantidadUsada: newDetail.quantity,
       idMateriaPrima_fk:newDetail.product.idProducto
-
     }
-    console.log("newDetail1: ", newDetail1);
+    
     try {
-      if (newDetail.idProduccion) {
+      console.log("newDetail1: xxxx ", newDetail1);
+      if (newDetail.idProduccion_fk) {
         await axios.put(`http://127.0.0.1:8000/api/v1/detalle_produccion/${newDetail.idProduccion}/`, newDetail1);
       } else {
         await axios.post('http://127.0.0.1:8000/api/v1/detalle_produccion/', newDetail1);
@@ -133,7 +137,7 @@ const Produccion = () => {
 
   const openNew = () => {
     setSelectedProduction(null);
-    setNewProduction({ production_date: new Date().toISOString().split('T')[0] });
+    setNewProduction({ production_date: new Date().toISOString().slice(0, 10) });
     setProductionDialog(true);
   };
 
@@ -143,17 +147,37 @@ const Produccion = () => {
   };
 
   const editProduction = (production) => {
-    console.log("production: ", production);
+    
+    let pro
     setSelectedProduction(production);
-    setNewProduction({ ...production });
+    const { idProd_fk: p}=production;
+    console.log ("p: ", p);
+    products.map((prod) => {
+      if(prod.nombProd==p)
+           pro=prod.idProducto
+          console.log(pro)       
+    })
+    
+    setNewProduction({
+      id: production.idProduccion,
+      product: pro,
+      quantity: production.cantProduccion,
+      production_date: production.fechaProduccion
+    });
+    //agregado
+    fetchProductionDetails(production.idProduccion);
     setProductionDialog(true);
   };
 
   const editProductionDetail = (detail) => {
-    setNewDetail({ ...detail });
+    setNewDetail({
+      id: detail.id,
+      production: detail.production,
+      product: detail.product.id,
+      quantity: detail.quantity
+    });
     setDetailDialog(true);
   };
-
   const actionBodyTemplate = (rowData) => {
     return (
       <>
@@ -174,7 +198,7 @@ const Produccion = () => {
   };
 
   const selectProduction = (production) => {
-    console.log("production: ", production);
+    
     setSelectedProduction(production);
     fetchProductionDetails(production.idProduccion);
   };
@@ -188,10 +212,10 @@ const Produccion = () => {
         <Button label="New Production" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
         
         <DataTable value={productions} responsiveLayout="scroll">
-          <Column field="id" header="ID"></Column>
-          <Column field="product.name" header="Product"></Column>
-          <Column field="production_date" header="Production Date"></Column>
-          <Column field="quantity" header="Quantity"></Column>
+          <Column field="idProduccion" header="ID"></Column>
+          <Column field="idProd_fk" header="Product"></Column>
+          <Column field="fechaProduccion" header="Production Date"></Column>
+          <Column field="cantProduccion" header="Quantity"></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
@@ -199,25 +223,25 @@ const Produccion = () => {
       <Dialog visible={productionDialog} style={{ width: '450px' }} header="Producto" modal className="p-fluid" onHide={() => setProductionDialog(false)}>
         <div className="field">
           <label htmlFor="product">Product</label>
-          <Dropdown id="product" 
-          value={newProduction.product}          
-          onChange={(e) => setNewProduction({ ...newProduction, product: e.value })} options={products} optionLabel="name"          
+          <Dropdown id="product" value={newProduction.product || newProduction.nombProd}
+          onChange={(e) => setNewProduction({ ...newProduction, product: e.value })}
+          options={products}
+          itemTemplate={(name) => <div>{name.nombProd}</div>}
+          valueTemplate={(name) => {
+            if(name){
 
-          itemTemplate={(product) => <div>{product.nombProd}</div>} 
-          valueTemplate={(product) => {
-            if(product){
-              return <div>{product.nombProd}</div>
-            }
-            else{
+              return <div>{name.nombProd}</div>
+          }
+          else{
               return <div>Seleccione Producto</div>
-            }
-          }}          
-          
-          placeholder="Seleccione Producto" />
+          }}}
+          optionLabel="name" 
+          optionValue="id" 
+          placeholder="Select Product" />
         </div>
         <div className="field">
           <label htmlFor="production_date">Production Date</label>
-          <Calendar id="production_date" value={new Date(newProduction.production_date || '')} onChange={(e) => setNewProduction({ ...newProduction, production_date: e.value.toISOString().split('T')[0] })} showIcon />
+          <Calendar id="production_date" value={new Date(newProduction.production_date || '')} onChange={(e) => setNewProduction({ ...newProduction, production_date: e.value.toISOString().slice(0, 10) })} showIcon />
         </div>
         <div className="field">
           <label htmlFor="quantity">Quantity</label>
@@ -231,9 +255,9 @@ const Produccion = () => {
           <h2>Production Details for Production #{selectedProduction.idProduccion}</h2>
           <Button label="New Detail" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNewDetail} />
           
-          <DataTable value={productionDetails} responsiveLayout="scroll">
-            <Column field="idProd_fk" header="ID"></Column>
-            <Column field="product.nombProd" header="Product Used"></Column>
+          <DataTable value={productionDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
+            <Column field="idProduccion_fk" header="PRODUCCION"></Column>
+            <Column field="idMateriaPrima_fk" header="Product Used"></Column>
             <Column field="cantidadUsada" header="Quantity Used"></Column>
             <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
           </DataTable>
@@ -244,16 +268,15 @@ const Produccion = () => {
         <div className="field">
           <label htmlFor="product">Product Used</label>
           <Dropdown id="product" 
-          value={newDetail.product}
-          itemTemplate={(product) => <div>{product.nombProd}</div>}
-          valueTemplate={(product) => {
-            if(product){
-              return <div>{product.nombProd}</div>
-            }
-            else{
+          value={newDetail.product}       
+          itemTemplate={(name) => <div>{name.nombProd}</div>}
+          valueTemplate={(name) => {
+            if(name){
+              return <div>{name.nombProd}</div>
+          }
+          else{
               return <div>Seleccione Producto</div>
-            }
-          }}
+          }}}
           onChange={(e) => setNewDetail({ ...newDetail, product: e.value })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
         </div>
         <div className="field">

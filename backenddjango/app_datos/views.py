@@ -1,4 +1,3 @@
-
 from rest_framework import viewsets
 from . serializer import *
 from . models import *
@@ -45,6 +44,14 @@ class ProduccionViewSet(viewsets.ModelViewSet):
 class DetalleProduccionViewSet(viewsets.ModelViewSet):
     serializer_class = Detalle_ProduccionSerializer
     queryset = Detalle_Produccion.objects.all()
+
+    def get_queryset(self):
+        queryset =  super().get_queryset()
+        produccion = self.request.query_params.get('idProduccion_fk', None)
+        if produccion is not None:
+            queryset = queryset.filter(idProduccion_fk=produccion)
+        return queryset
+    
 
 class InventarioViewSet(viewsets.ModelViewSet):
     serializer_class = InventarioSerializer
