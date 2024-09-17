@@ -8,8 +8,6 @@ router.register(r'tipo_producto', views.Tipo_ProductoViewSet, 'tipo_producto')
 
 router.register(r'proveedores', views.ProveedoresViewSet, 'proveedores')
 
-router.register(r'tipo_pedido', views.Tipo_PedidoViewSet, 'tipo_pedido')
-
 router.register(r'sucursal', views.SucursalesViewSet, 'sucursal')
 
 router.register(r'categoria', views.CategoriaViewSet, 'categoria')

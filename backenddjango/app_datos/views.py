@@ -10,9 +10,7 @@ class ProveedoresViewSet(viewsets.ModelViewSet):
     serializer_class = ProveedoresSerializer
     queryset = Proveedores.objects.all()
     
-class Tipo_PedidoViewSet(viewsets.ModelViewSet):
-    serializer_class = Tipo_PedidoSerializer
-    queryset = Tipo_Pedido.objects.all()
+
 
 class SucursalesViewSet(viewsets.ModelViewSet):
     serializer_class = SucursalSerializer
@@ -33,6 +31,12 @@ class PedidoViewSet(viewsets.ModelViewSet):
 class Detalle_PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = Detalle_PedidoSerializer
     queryset = Detalle_Pedido.objects.all()
+    def get_queryset(self):
+        queryset =  super().get_queryset()
+        pedido = self.request.query_params.get('idPed_fk', None)
+        if pedido is not None:
+            queryset = queryset.filter(idPed_fk=pedido)
+        return queryset
 class DevolucionesViewSet(viewsets.ModelViewSet):
     serializer_class = DevolucionesSerializer
     queryset = Devoluciones.objects.all()

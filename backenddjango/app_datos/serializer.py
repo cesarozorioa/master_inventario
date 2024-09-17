@@ -11,10 +11,7 @@ class ProveedoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proveedores
         fields = '__all__'
-class Tipo_PedidoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tipo_Pedido
-        fields = '__all__'
+
 class SucursalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sucursal
@@ -39,17 +36,33 @@ class ProductoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PedidoSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idSucursal_fk'] = instance.idSucursal_fk.nombSucursal
+        return rep
     class Meta:
         model = Pedido
         fields = '__all__'
 
+class Detalle_PedidoFilter(filters.FilterSet):
+    #name = filters.CharFilter(lookup_expr='exact')
+
+    class Meta:
+        model = Detalle_Pedido
+        fields = ['idPed_fk']
 
 class Detalle_PedidoSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['idProd_fk'] = instance.idProd_fk.nombProd
+        
+        return rep
     class Meta:
         model = Detalle_Pedido
         fields = '__all__'
-        
-
+        filterset_class = Detalle_PedidoFilter        
 
 class DevolucionesSerializer(serializers.ModelSerializer):     #idSuc_fk = serializers.StringR
     def to_representation(self, instance):

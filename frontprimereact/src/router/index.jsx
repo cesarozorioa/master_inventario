@@ -3,7 +3,6 @@ import Inicio from "../pages/Inicio";
 import NotFound from "../pages/NotFound";
 import LayoutPublic from "../layout/LayoutPublic";
 import TipoProducto from "../pages/TipoProducto";
-import TipoPedido from "../pages/TipoPedido";
 import Sucursal from "../pages/Sucursal";
 import Categoria from "../pages/Categoria";
 import Distribuidor from "../pages/Distribuidor";
@@ -11,6 +10,7 @@ import ProductoManager from "../pages/ProductoManager";
 import IngresoProductos from "../pages/IngresoProductos";
 import Devolucion from "../pages/Devolucion";
 import Produccion from "../pages/Produccion";
+import Pedido from "../pages/Pedido";
 
 export const router = createBrowserRouter([
 {
@@ -33,10 +33,7 @@ export const router = createBrowserRouter([
             element: <Categoria />,
         },
         
-        {
-            path: "/tipopedido",
-            element: <TipoPedido />,
-        },
+       
         {
             path: "/sucursal",
             element : <Sucursal />,
@@ -61,6 +58,10 @@ export const router = createBrowserRouter([
         {
             path: "/produccion",
             element: <Produccion />,
+        },
+        {
+            path: "/pedido",
+            element: <Pedido />
         },
         
         {

@@ -36,6 +36,7 @@ const Navbar = () => {
         {
             label: 'Pedidos',
             icon: 'pi pi-server',
+            command: () => {navigate('/pedido')},
         },
         {
             label: 'Administracion  ',
@@ -56,11 +57,7 @@ const Navbar = () => {
                     icon: 'pi pi-server',
                     command: () => {navigate('/distribuidor')},
                 },
-                {
-                    label: 'Tipo de Pedidos',
-                    icon: 'pi pi-pencil',
-                    command: () => {navigate('/tipopedido')},
-                },
+                
                 {
                     label: 'Sucursales',
                     icon: 'pi pi-palette', 

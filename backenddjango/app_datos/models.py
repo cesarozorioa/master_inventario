@@ -17,13 +17,7 @@ class Proveedores(models.Model):
         db_table = 'proveedores'
     def __str__(self):
         return self.nombProveedor
-class Tipo_Pedido(models.Model):
-    idTipoPedido = models.AutoField(primary_key=True)
-    nombPedido = models.CharField(max_length=25,null=False,blank=False)
-    class Meta:        
-        db_table = 'tipo_Pedido'
-    def __str__(self):
-        return self.nombPedido
+
     
 class Sucursal(models.Model):
     idSucursal = models.AutoField(primary_key=True)
@@ -64,8 +58,7 @@ class Ingreso(models.Model):
         return str(self.idIngreso)
     
 class Pedido(models.Model):
-    idPedido = models.AutoField(primary_key=True)        
-    idTipoPedido_fk = models.ForeignKey(Tipo_Pedido, on_delete=models.CASCADE)
+    idPedido = models.AutoField(primary_key=True)         
     idSucursal_fk = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     fechaPedido = models.DateField(null=True,blank=True)    
     class Meta:        
@@ -77,7 +70,7 @@ class Detalle_Pedido(models.Model):
     idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
     idPed_fk = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     cantidadPedido = models.IntegerField(null=False,blank=False)
-    cantidadDespacho = models.IntegerField(null=False,blank=False)
+    
     class Meta:        
         db_table = 'detalle_Pedido'
     def __str__(self):
@@ -113,8 +106,7 @@ class Detalle_Produccion(models.Model):
     class Meta:        
         db_table = 'detalle_Produccion'
     def __str__(self):
-        return str(self.idDetalleProduccion)
-    
+        return str(self.idDetalleProduccion)    
 
 class Inventario(models.Model):
     idInventario = models.AutoField(primary_key=True)
