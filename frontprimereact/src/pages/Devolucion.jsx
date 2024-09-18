@@ -59,6 +59,10 @@ const Devolucion = () => {
         }
         return devoluciones;
     };
+    const obtenerNombreProducto = (idProd_fk) => {
+        const producto = productos.find((prod) => prod.idProducto === idProd_fk);
+        return producto ? producto.nombProd : 'Desconocido';
+      };
 
     const abrirModal = () => {
         setModalVisible(true);
@@ -70,7 +74,7 @@ const Devolucion = () => {
     };
 
     const guardarDevolucion = () => {      
-        
+       
         const nuevoDevolucion = { idProd_fk: selectedProducto.idProducto, cantDevuelta:cantidad, idSuc_fk: selectedSucursal.idSucursal, fechaDevolucion: fechaDevolucion.toISOString().slice(0, 10), motivoDevolucion: motivoDevolucion };
         console.log("nueva devolucion: ", nuevoDevolucion);
         if(isEditing){
@@ -131,7 +135,7 @@ const Devolucion = () => {
     const accionPlantilla = (rowData) => (
         <React.Fragment>
             <Button label="Editar" onClick={() => editarDevolucion(rowData)} className="p-button-warning" />
-            <Button label="Eliminar" onClick={() => eliminarDevolucion(rowData.idIngreso)} className="p-button-danger" />
+            <Button label="Eliminar" onClick={() => eliminarDevolucion(rowData.idDevolucion)} className="p-button-danger" />
         </React.Fragment>
     );
 
@@ -233,7 +237,7 @@ const Devolucion = () => {
             <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
             <DataTable value={filtrarDevoluciones()}>                
-                <Column field="idProd_fk" header="Producto" />           
+                <Column field="idProd_fk" header="Producto" body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />           
                 <Column field="cantDevuelta" header="Cantidad" />
                 <Column field="fechaDevolucion" header="Fecha de Ingreso" />
                 <Column field="motivoDevolucion" header="Motivo" />
