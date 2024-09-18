@@ -36,6 +36,12 @@ const Pedido = () => {
     }
   };
 
+  const obtenerNombreProducto = (idProd_fk) => {    
+    const producto = products.find((prod) => prod.idProducto === idProd_fk);
+    console.log("producto: ",producto)
+    return producto ? producto.nombProd : 'Desconocido';
+  };
+
   const fetchSucursales = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/sucursal/');
@@ -53,9 +59,7 @@ const Pedido = () => {
     }
   };
 
-
-  const fetchPedidoDetails = async (pedidoId) => {
-    
+  const fetchPedidoDetails = async (pedidoId) => {    
     console.log("newDetail: ", newDetail);
     
     try {      
@@ -67,8 +71,7 @@ const Pedido = () => {
       
     }
     
-  };
-   
+  };   
 
   const savePedido = async () => {
     console.log("newPedido en saveProduction: ",newPedido );
@@ -272,7 +275,9 @@ const Pedido = () => {
           
           <DataTable value={pedidoDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
             <Column field="idPed_fk" header="PEDIDO"></Column>
-            <Column field="idProd_fk" header="Product Pedido"></Column>
+            <Column field="idProd_fk" header="Product Pedido"
+            body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
+            />
             <Column field="cantidadPedido" header="Quantity Used"></Column>
             <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
           </DataTable>
@@ -303,5 +308,4 @@ const Pedido = () => {
     </div>
   );
 };
-
 export default Pedido;

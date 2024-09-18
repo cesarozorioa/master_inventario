@@ -35,7 +35,56 @@ class Detalle_PedidoViewSet(viewsets.ModelViewSet):
         pedido = self.request.query_params.get('idPed_fk', None)
         if pedido is not None:
             queryset = queryset.filter(idPed_fk=pedido)
-        return queryset
+        return queryset    
+    #funciones para el manejo de inventario
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        producto = Producto.objects.get(idProducto=serializer.data['idProd_fk'])
+        producto.stock -= serializer.validated_data['cantidadPedido']
+        producto.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        #metodo put para el front
+    def update(self, request, *args, **kwargs):
+        devolucion_original = self.get_object()
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()    
+    # Actualiza el ingreso
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)    
+    # Obtén el id del producto desde el serializer data
+        id_producto = serializer.data['idProd_fk']  # Asegúrate de que este campo devuelva el ID del producto, no la instancia
+     # Busca el producto usando el ID
+        producto = Producto.objects.get(idProducto=id_producto)    
+    # Si estás actualizando la cantidad del ingreso, deberías ajustar el stock del producto.   
+        nueva_cantidad = serializer.data['cantidadPedido'] 
+        diferencia = nueva_cantidad - devolucion_original.cantDevuelta 
+        if diferencia > 0:
+            producto.stock -= abs(diferencia)
+        elif diferencia < 0:
+            producto.stock += abs(diferencia)
+    # Actualiza el stock del producto
+        #producto.stock += nueva_cantidad  # Aquí ajustas según tu lógica
+        producto.save()
+        return Response(serializer.data)
+    #metodo delete para el front
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()  # Obtiene la instancia de Ingreso a eliminar
+        pedido = Detalle_Pedido.objects.get(idDetalleP=instance.idDetalleP)  # Obtiene el ingreso específico
+    # Eliminar el ingreso
+        self.perform_destroy(instance)
+    # Acceder al producto relacionado con el ingreso
+        producto = Producto.objects.get(idProducto=pedido.idProd_fk.idProducto)  # Accede al ID del producto
+    # Actualizar el stock
+        producto.stock += pedido.cantidadPedido
+        producto.save()
+    # Respuesta exitosa
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class DevolucionesViewSet(viewsets.ModelViewSet):
     serializer_class = DevolucionesSerializer
     queryset = Devoluciones.objects.all()
