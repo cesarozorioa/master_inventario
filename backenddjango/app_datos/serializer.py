@@ -79,7 +79,7 @@ class ProduccionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['idProd_fk'] = instance.idProd_fk.nombProd
+        #rep['idProd_fk'] = instance.idProd_fk.nombProd
         return rep
     class Meta:
         model = Produccion
@@ -97,7 +97,7 @@ class Detalle_ProduccionSerializer(serializers.ModelSerializer):
    # name = serializers.CharField(source='idProduccion_fk')
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['idMateriaPrima_fk'] = instance.idMateriaPrima_fk.nombProd
+        #rep['idMateriaPrima_fk'] = instance.idMateriaPrima_fk.nombProd
         return rep
     class Meta:
         model = Detalle_Produccion

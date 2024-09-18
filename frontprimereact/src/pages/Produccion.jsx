@@ -24,7 +24,12 @@ const Produccion = () => {
     fetchProducts();
     fetchProductions();
   }, []);
+  
 
+  const obtenerNombreProducto = (idProd_fk) => {
+    const producto = products.find((prod) => prod.idProducto === idProd_fk);
+    return producto ? producto.nombProd : 'Desconocido';
+  };
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/producto/');
@@ -212,15 +217,14 @@ const Produccion = () => {
 
   return (
     <div>
-      <Toast ref={toast} />
-      
+      <Toast ref={toast} />      
       <div className="card">
-        <h1>Production Management</h1>
-        <Button label="New Production" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-        
+        <h1>Producciónes Planta</h1>
+        <Button label="New Production" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />        
         <DataTable value={productions} responsiveLayout="scroll">
           <Column field="idProduccion" header="ID"></Column>
-          <Column field="idProd_fk" header="Product"></Column>
+          <Column field="idProd_fk" header="Product" 
+          body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}/>
           <Column field="fechaProduccion" header="Production Date"></Column>
           <Column field="cantProduccion" header="Quantity"></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
@@ -259,13 +263,15 @@ const Produccion = () => {
 
       {selectedProduction && (
         <div className="card mt-4">
-          <h2>Production Details for Production #{selectedProduction.idProduccion}</h2>
+          <h2>Productos usados en la Produccion #{selectedProduction.idProduccion}</h2>
           <Button label="New Detail" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNewDetail} />
           
           <DataTable value={productionDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
-            <Column field="idProduccion_fk" header="PRODUCCION"></Column>
-            <Column field="idMateriaPrima_fk" header="Product Used"></Column>
-            <Column field="cantidadUsada" header="Quantity Used"></Column>
+            <Column field="idProduccion_fk" header="No Produccion"></Column>
+            <Column field="idMateriaPrima_fk" header="Materia Prima Usada" 
+            body={(rowData) => obtenerNombreProducto(rowData.idMateriaPrima_fk)}
+            />
+            <Column field="cantidadUsada" header="Cantidad"></Column>
             <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
           </DataTable>
         </div>
