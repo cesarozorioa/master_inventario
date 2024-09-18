@@ -1,5 +1,6 @@
 from rest_framework import viewsets,status
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from . serializer import *
 from . models import *
 # Create your views here.
@@ -26,6 +27,30 @@ class ProductoViewSet(viewsets.ModelViewSet):
 class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     queryset = Pedido.objects.all()
+    """Implementación para el manejo de inventario"""
+    def destroy(self, request, *args, **kwargs):
+        # Obtener el pedido que se va a eliminar
+        instance = self.get_object()
+        
+        # Obtener todos los productos asociados a este pedido
+        detalles_pedido = Detalle_Pedido.objects.filter(idPed_fk=instance.idPedido)
+        
+        # Iterar sobre cada detalle de pedido y actualizar el stock de cada producto
+        for detalle in detalles_pedido:
+            producto = Producto.objects.get(idProducto=detalle.idProd_fk.idProducto)
+            
+            # Sumar la cantidad del producto en el pedido de vuelta al stock
+            producto.stock += detalle.cantidadPedido
+            producto.save()
+        
+        # Eliminar los detalles del pedido (productos solicitados)
+        detalles_pedido.delete()
+        
+        # Eliminar el pedido
+        self.perform_destroy(instance)
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class Detalle_PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = Detalle_PedidoSerializer
