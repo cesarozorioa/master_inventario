@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import viewsets,status
+from rest_framework.response import Response
 from . serializer import *
 from . models import *
 # Create your views here.
@@ -58,6 +59,35 @@ class DetalleProduccionViewSet(viewsets.ModelViewSet):
 class IngresoViewSet(viewsets.ModelViewSet):
     serializer_class = IngresoSerializer    
     queryset = Ingreso.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        producto = Producto.objects.get(idProducto=serializer.data['idProd_fk'])
+        producto.stock += serializer.validated_data['cantIngreso']
+        producto.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()  # Obtiene la instancia de Ingreso a eliminar
+        ingreso = Ingreso.objects.get(idIngreso=instance.idIngreso)  # Obtiene el ingreso específico
+
+    # Eliminar el ingreso
+        self.perform_destroy(instance)
+
+    # Acceder al producto relacionado con el ingreso
+        producto = Producto.objects.get(idProducto=ingreso.idProd_fk.idProducto)  # Accede al ID del producto
+
+    # Actualizar el stock
+        producto.stock -= ingreso.cantIngreso
+        producto.save()
+
+    # Respuesta exitosa
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class DespachoViewSet(viewsets.ModelViewSet):
     serializer_class = DespachoSerializer

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
@@ -54,6 +55,11 @@ const IngresoProductos = () => {
     }
     return ingresos;
   };
+  
+  const obtenerNombreProducto = (idProd_fk) => {
+    const producto = productos.find((prod) => prod.idProducto === idProd_fk);
+    return producto ? producto.nombProd : 'Desconocido';
+  };
 
   const abrirModal = () => {
     
@@ -68,7 +74,7 @@ const IngresoProductos = () => {
     console.log("Ingreso selectedProducto: ", selectedProducto);
 
     const nuevoIngreso = {
-      idProd_fk: selectedProducto.idProducto,
+      idProd_fk: parseInt(selectedProducto.idProducto),
       cantIngreso: cantidad,
       fechaIngreso: fechaIngreso.toISOString().slice(0, 10),
     };
@@ -95,13 +101,14 @@ const IngresoProductos = () => {
         });
     } else {
       axios
-        .post("http://127.0.0.1:8000/api/v1/ingreso/", nuevoIngreso)
+        .post("http://127.0.0.1:8000/api/v1/ingreso/",nuevoIngreso)
         .then((response) => {
           setIngresos([...ingresos, response.data]);
           setModalVisible(false);
         })
         .catch((error) => {
           console.error("Error en el servidor:", error.response.data);
+          
         });
     }
     
@@ -123,8 +130,10 @@ const IngresoProductos = () => {
     setFechaIngreso(new Date(ingreso.fechaIngreso));
   };
   const eliminarIngreso = (ingresoId) => {
+    const idIngreso = parseInt(ingresoId);
+    console.log("idIngreso: >>>>>", idIngreso);
     axios
-      .delete(`http://127.0.0.1:8000/api/v1/ingreso/${ingresoId}/`)
+      .delete(`http://127.0.0.1:8000/api/v1/ingreso/${idIngreso}/`)
       .then(() => {
         setIngresos(
           ingresos.filter((ingreso) => ingreso.idIngreso !== ingresoId)
@@ -219,13 +228,15 @@ const IngresoProductos = () => {
       </div>
     );
   };
+  
 
   return (
     <div>
       <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
       <DataTable value={filtrarIngresos()}>
-        <Column field="idProd_fk" header="Producto" />
+        <Column field="idProd_fk" header="Producto" 
+        body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />
         <Column field="cantIngreso" header="Cantidad" />
         <Column field="fechaIngreso" header="Fecha de Ingreso" />
         <Column body={accionPlantilla} header="Acciones" />
