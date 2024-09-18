@@ -42,6 +42,7 @@ class Producto(models.Model):
     idTipo_fk = models.ForeignKey(Tipo_Producto, on_delete=models.CASCADE)
     idProveedor_fk = models.ForeignKey(Proveedores, on_delete=models.CASCADE)
     unidadProducto = models.CharField(max_length=25,null=True,blank=True)
+    stock = models.IntegerField(null=False,blank=False,default=0)
     class Meta:        
         db_table = 'producto'
     def __str__(self):
@@ -108,15 +109,7 @@ class Detalle_Produccion(models.Model):
     def __str__(self):
         return str(self.idDetalleProduccion)    
 
-class Inventario(models.Model):
-    idInventario = models.AutoField(primary_key=True)
-    idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantInventario = models.IntegerField(null=False,blank=False)
-    fechaInventario = models.DateField(null=False,blank=False)
-    class Meta:        
-        db_table = 'inventario'
-    def __str__(self):
-        return str(self.idInventario)
+
 
 class Despacho(models.Model):
     idDespacho = models.AutoField(primary_key = True)
