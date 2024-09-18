@@ -104,10 +104,7 @@ class Detalle_ProduccionSerializer(serializers.ModelSerializer):
         fields = '__all__'
         filterset_class = Detalle_ProduccionFilter
         
-class InventarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Inventario
-        fields = '__all__'
+
 
 class IngresoSerializer(serializers.ModelSerializer):
     #idProd_fk = ProductoSerializer()    

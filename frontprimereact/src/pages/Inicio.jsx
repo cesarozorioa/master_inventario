@@ -1,8 +1,11 @@
+import Inventario from "./Inventario"
 
 
 const Inicio = () => {
   return (
-    <div>Inicio</div>
+    <>
+      <Inventario />
+    </>
   )
 }
 

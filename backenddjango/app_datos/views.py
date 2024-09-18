@@ -10,8 +10,6 @@ class ProveedoresViewSet(viewsets.ModelViewSet):
     serializer_class = ProveedoresSerializer
     queryset = Proveedores.objects.all()
     
-
-
 class SucursalesViewSet(viewsets.ModelViewSet):
     serializer_class = SucursalSerializer
     queryset = Sucursal.objects.all()
@@ -56,10 +54,6 @@ class DetalleProduccionViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(idProduccion_fk=produccion)
         return queryset
     
-
-class InventarioViewSet(viewsets.ModelViewSet):
-    serializer_class = InventarioSerializer
-    queryset = Inventario.objects.all()
 
 class IngresoViewSet(viewsets.ModelViewSet):
     serializer_class = IngresoSerializer    

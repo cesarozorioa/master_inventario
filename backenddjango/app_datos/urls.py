@@ -28,7 +28,7 @@ router.register(r'ingreso', views.IngresoViewSet, 'ingreso')
 
 router.register(r'despacho', views.DespachoViewSet, 'despacho')
 
-router.register(r'inventario', views.InventarioViewSet, 'inventario')
+
 
 urlpatterns = [
     path('v1/', include(router.urls)),
