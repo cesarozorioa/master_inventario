@@ -4,11 +4,11 @@ import { useUserContext } from "../utils/UserContext";
 
 const Inicio = () => {
 
-  const {user}=useUserContext();
+  const {user,userNamebd}=useUserContext();
   return (
     <>
     {
-      !user ? <LoginForm />: <h1>Bienvenido {user.username}</h1>
+      !user ? <LoginForm />: <h1>Bienvenido {userNamebd}</h1>
     }
       
     </>

@@ -6,7 +6,7 @@ import { useUserContext } from "../utils/UserContext";
 
 
 const LayoutPublic = () => { 
-  const {user}=useUserContext();
+  const {user,userNamebd}=useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +19,9 @@ const LayoutPublic = () => {
     <>
      
       <main className="container"> 
+        <div className="text-center">
+          {user && <h2>Usuario: {userNamebd}</h2>}
+        </div>
         
         <Navbar/>
         <Outlet />
