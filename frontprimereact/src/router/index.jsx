@@ -11,63 +11,70 @@ import IngresoProductos from "../pages/IngresoProductos";
 import Devolucion from "../pages/Devolucion";
 import Produccion from "../pages/Produccion";
 import Pedido from "../pages/Pedido";
+import Inventario from "../pages/Inventario";
+
+
 
 export const router = createBrowserRouter([
-{
+  {
     path: "/",
     element: <LayoutPublic />,
     errorElement: <NotFound />,
-    children: [
+    children: [     
         {
             index: true,
-            element: <Inicio />,                
-        },
-
-        {
-            path: "/tipoproducto",
-            element: <TipoProducto />,
+            element: <Inicio />,
+        },                 
             
-        },
-        {
-            path: "/categoria",
-            element: <Categoria />,
-        },
+              {
+               path: "/inventario",
+                element: <Inventario />,
+              },
         
-       
-        {
-            path: "/sucursal",
-            element : <Sucursal />,
-        },
-        {
-            path: "/distribuidor",
-            element : <Distribuidor />,
-        },
-        {
-            path: "/productomanager",
-            element : <ProductoManager />,
-        },
-
-        {
-            path: "/ingreso",
-            element : <IngresoProductos />,
-        }, 
-        { 
-            path:"/devolucion",
-            element : <Devolucion />,
-        },
-        {
-            path: "/produccion",
-            element: <Produccion />,
-        },
-        {
-            path: "/pedido",
-            element: <Pedido />
-        },
+              {
+                path: "/tipoproducto",
+                element: <TipoProducto />,
+              },
+              {
+                path: "/categoria",
+                element: <Categoria />,
+              },
         
-        {
-            path: "*",
-            element: <NotFound />,
-        },
+              {
+                path: "/sucursal",
+                element: <Sucursal />,
+              },
+              {
+                path: "/distribuidor",
+                element: <Distribuidor />,
+              },
+              {
+                path: "/productomanager",
+                element: <ProductoManager />,
+              },
         
-    ],
-}]);
+              {
+                path: "/ingreso",
+                element: <IngresoProductos />,
+              },
+              {
+                path: "/devolucion",
+                element: <Devolucion />,
+              },
+              {
+                path: "/produccion",
+                element: <Produccion />,
+              },
+              {
+                path: "/pedido",
+                element: <Pedido />,
+              },
+        
+              {
+                path: "*",
+                element: <NotFound />,
+              },
+            ],
+          },   
+  
+]);

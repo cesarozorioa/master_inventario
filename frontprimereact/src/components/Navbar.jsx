@@ -1,14 +1,24 @@
 import { Menubar } from 'primereact/menubar';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../utils/UserContext';
 
 const Navbar = () => {
+    const {user,setUser}=useUserContext();    
     const navigate = useNavigate();
+    if(user){
+
     const items = [
+       
         {
             label: 'Inicio',
             icon: 'pi pi-home',
-            command: () => navigate('/'),          
+            command: () => navigate('/'),      
             
+        },
+        {  
+            label: 'Inventario',
+            icon: 'pi pi-star',
+            command: () => {navigate('/inventario')},
         },
         {
             label: 'Ingresos',
@@ -71,8 +81,12 @@ const Navbar = () => {
             ]
         },
         {
-            label: 'Contact',
-            icon: 'pi pi-envelope'
+            label: 'Salir',
+            icon: 'pi pi-envelope',command:()=>{
+                setUser(false)
+                navigate('/')
+                
+            },
         }
     ];
   return (
@@ -83,6 +97,7 @@ const Navbar = () => {
         </div>
     </>
   )
+}
 }
 
 export default Navbar

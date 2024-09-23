@@ -97,8 +97,11 @@ const Inventario = () => {
 
     return (
         <div>
+            <div className='flex justify-content-between align-items-center'>
             <h1>Inventario</h1>
             <Button label="Imprimir Inventario" icon="pi pi-print" onClick={handlePrint} />
+            </div>
+            
             <div ref={componentRef}>
                 <DataTable 
                     value={productos} 
