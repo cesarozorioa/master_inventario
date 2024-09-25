@@ -98,10 +98,7 @@ const Pedido = () => {
   };
 
   const savePedidoDetail = async () => {
-    console.log("newDetail en savePedidoDetail: ",newDetail );
-    console.log("selectedPedido: ",selectedPedido);
-    /*const { id:idDetalleP } = newDetail;
-    const { idPedido: pedidoId } = selectedPedido;*/
+   
     const newDetail1 = {
       //id:newDetail.id,
       idPed_fk:selectedPedido.idPedido,
@@ -110,10 +107,9 @@ const Pedido = () => {
     }
    
     try {
-      console.log("newDetail1: yyyyyy ", newDetail1);
-      console.log("newDetail: ", newDetail);
+      
       if (newDetail.id) {    
-        alert("id: "+newDetail.id);    
+            
         await axios.put(`http://127.0.0.1:8000/api/v1/detalle_pedido/${newDetail.id}/`,newDetail1);
         toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Actualizado', life: 3000 });
       } else if (newDetail.product.stock >= newDetail.quantity) {

@@ -245,10 +245,12 @@ class DetalleProduccionViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         producto = Producto.objects.get(idProducto=serializer.data['idMateriaPrima_fk'])
-        producto.stock -= serializer.validated_data['cantidadUsada']
-        producto.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        if serializer.data['cantidadUsada'] > 0 and producto.stock >= serializer.data['cantidadUsada']:        
+            #producto.stock += nueva_cantidad        
+            producto.stock -= serializer.validated_data['cantidadUsada']
+            producto.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         #metodo put para el front
     def update(self, request, *args, **kwargs):
         detalleP_original = self.get_object()

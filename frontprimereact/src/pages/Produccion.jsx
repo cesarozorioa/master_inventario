@@ -90,12 +90,12 @@ const Produccion = () => {
   };
 
   const saveProductionDetail = async () => {
-    console.log("newDetail1 en saveProductionDetail: ",newDetail );
+    console.log("selectedProduction: ", selectedProduction, );
     const { id:idDetalle } = newDetail;
     const { idProduccion: productionId } = selectedProduction;
     const newDetail1 = {
-      id:idDetalle,
-      idProduccion_fk:productionId,
+      //id:idDetalle,
+      idProduccion_fk:selectedProduction.idProduccion,
       cantidadUsada: newDetail.quantity,
       idMateriaPrima_fk:newDetail.product.idProducto
     }
@@ -104,14 +104,17 @@ const Produccion = () => {
       console.log("newDetail1: xxxx ", newDetail1);
       if (newDetail.id) {
         await axios.put(`http://127.0.0.1:8000/api/v1/detalle_produccion/${newDetail.id}/`, newDetail1);
-      } else {
-        
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Detalle Actualizado', life: 3000 });
+      } else if (newDetail.product.stock >= newDetail.quantity) {        
         await axios.post('http://127.0.0.1:8000/api/v1/detalle_produccion/', newDetail1);
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Production detail saved', life: 3000 });
+      }else{
+        toast.current.show({ severity: 'error', summary: 'Error', detail: 'No hay suficiente stock', life: 3000 });
       }
       fetchProductionDetails(selectedProduction.idProduccion);
       setDetailDialog(false);
       setNewDetail({});
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Production detail saved', life: 3000 });
+      
     } catch (error) {
       console.error('Error saving production detail:', error);
       toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error saving production detail', life: 3000 });
