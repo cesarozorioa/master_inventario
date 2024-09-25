@@ -59,8 +59,7 @@ const Pedido = () => {
     }
   };
 
-  const fetchPedidoDetails = async (pedidoId) => {    
-    console.log("newDetail: ", newDetail);
+  const fetchPedidoDetails = async (pedidoId) => {      
     
     try {      
       
@@ -99,28 +98,36 @@ const Pedido = () => {
   };
 
   const savePedidoDetail = async () => {
-    console.log("newDetail1 en savePedidoDetail: ",newDetail );
-    const { id:idDetalleP } = newDetail;
-    const { idPedido: pedidoId } = selectedPedido;
+    console.log("newDetail en savePedidoDetail: ",newDetail );
+    console.log("selectedPedido: ",selectedPedido);
+    /*const { id:idDetalleP } = newDetail;
+    const { idPedido: pedidoId } = selectedPedido;*/
     const newDetail1 = {
-      id:idDetalleP,
-      idPed_fk:pedidoId,
+      //id:newDetail.id,
+      idPed_fk:selectedPedido.idPedido,
       cantidadPedido: newDetail.quantity,
       idProd_fk:newDetail.product.idProducto
     }
    
     try {
-      console.log("newDetail1: xxxx ", newDetail1);
-      if (newDetail.id) {
-        await axios.put(`http://127.0.0.1:8000/api/v1/detalle_pedido/${newDetail.id}/`, newDetail1);
-      } else {
+      console.log("newDetail1: yyyyyy ", newDetail1);
+      console.log("newDetail: ", newDetail);
+      if (newDetail.id) {    
+        alert("id: "+newDetail.id);    
+        await axios.put(`http://127.0.0.1:8000/api/v1/detalle_pedido/${newDetail.id}/`,newDetail1);
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Actualizado', life: 3000 });
+      } else if (newDetail.product.stock >= newDetail.quantity) {
         
         await axios.post('http://127.0.0.1:8000/api/v1/detalle_pedido/', newDetail1);
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 }); 
+        
+      }else{
+        toast.current.show({ severity: 'error', summary: 'Error', detail: 'No hay suficiente stock', life: 3000 });
       }
       fetchPedidoDetails(selectedPedido.idPedido);
       setDetailDialog(false);
-      setNewDetail({});
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido detail saved', life: 3000 });
+      setNewDetail({}); 
+        
     } catch (error) {
       console.error('Error saving pedido detail:', error);
       toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error saving production detail', life: 3000 });

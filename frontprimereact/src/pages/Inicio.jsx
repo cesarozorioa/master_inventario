@@ -8,7 +8,8 @@ const Inicio = () => {
   return (
     <>
     {
-      !user ? <LoginForm />: <h1>Bienvenido {userNamebd}</h1>
+      
+      !user ? <LoginForm />: <h1 className="text-center">Bienvenido a la aplicación {userNamebd}</h1>
     }
       
     </>

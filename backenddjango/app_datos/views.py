@@ -63,13 +63,14 @@ class Detalle_PedidoViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         producto = Producto.objects.get(idProducto=serializer.data['idProd_fk'])
-        producto.stock -= serializer.validated_data['cantidadPedido']
-        producto.save()
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        if serializer.data['cantidadPedido'] > 0 and producto.stock >= serializer.data['cantidadPedido']:
+            producto.stock -= serializer.validated_data['cantidadPedido']
+            producto.save()
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
         #metodo put para el front
     def update(self, request, *args, **kwargs):
-        devolucion_original = self.get_object()
+        detalle_original = self.get_object()
         partial = kwargs.pop('partial', False)
         instance = self.get_object()    
     # Actualiza el ingreso
@@ -82,7 +83,7 @@ class Detalle_PedidoViewSet(viewsets.ModelViewSet):
         producto = Producto.objects.get(idProducto=id_producto)    
     # Si estás actualizando la cantidad del ingreso, deberías ajustar el stock del producto.   
         nueva_cantidad = serializer.data['cantidadPedido'] 
-        diferencia = nueva_cantidad - devolucion_original.cantDevuelta 
+        diferencia = nueva_cantidad - detalle_original.cantidadPedido 
         if diferencia > 0:
             producto.stock -= abs(diferencia)
         elif diferencia < 0:
