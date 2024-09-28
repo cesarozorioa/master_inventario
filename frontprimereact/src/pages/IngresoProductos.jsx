@@ -148,11 +148,13 @@ const IngresoProductos = () => {
     <React.Fragment>
       <Button
         label="Editar"
+        icon="pi pi-pencil"
         onClick={() => editarIngreso(rowData)}
         className="p-button-warning"
       />
       <Button
         label="Eliminar"
+        icon="pi pi-trash"
         onClick={() => eliminarIngreso(rowData.idIngreso)}
         className="p-button-danger"
       />
@@ -164,6 +166,7 @@ const IngresoProductos = () => {
       visible={modalVisible}
       onHide={() => setModalVisible(false)}
       header="Ingresar Producto"
+      className="p-fluid"
     >
       <div className="p-field">
         <label htmlFor="producto">Producto</label>

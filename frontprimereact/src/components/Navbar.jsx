@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../utils/UserContext';
 
 const Navbar = () => {
+   
     const {user,setUser}=useUserContext();    
     const navigate = useNavigate();
+
     if(user){
 
     const items = [
@@ -17,12 +19,12 @@ const Navbar = () => {
         },
         {  
             label: 'Inventario',
-            icon: 'pi pi-star',
+            icon: 'pi pi-calculator',
             command: () => {navigate('/inventario')},
         },
         {
             label: 'Ingresos',
-            icon: 'pi pi-star',
+            icon: 'pi pi-book',
             items: [
                 {
                     label: 'Entrada Productos',
@@ -45,12 +47,12 @@ const Navbar = () => {
         },
         {
             label: 'Pedidos',
-            icon: 'pi pi-server',
+            icon: 'pi pi-cart-plus',
             command: () => {navigate('/pedido')},
         },
         {
             label: 'Administracion  ',
-            icon: 'pi pi-search',
+            icon: 'pi pi-cog',
             items: [
                 {
                     label: 'Tipo de producto',
@@ -75,14 +77,14 @@ const Navbar = () => {
                 },
                 {
                     label: 'Productos',
-                    icon: 'pi pi-palette',
+                    icon: 'pi pi-palette ',                    
                     command: () => {navigate('/productomanager')},
                 },
             ]
         },
         {
             label: 'Salir',
-            icon: 'pi pi-envelope',command:()=>{
+            icon: 'pi pi-sign-out',command:()=>{
                 setUser(false)
                 navigate('/')
                 

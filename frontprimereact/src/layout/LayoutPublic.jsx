@@ -8,12 +8,14 @@ import { useUserContext } from "../utils/UserContext";
 const LayoutPublic = () => { 
   const {user,userNamebd}=useUserContext();
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  console.log("token: ", token)
 
   useEffect(() => {
-    if (!user) {
+    if (!user && !token) {
       navigate("/");
     }
-  }, [navigate, user]);
+  }, [navigate, user, token]);
 
   return (
     <>
@@ -21,12 +23,11 @@ const LayoutPublic = () => {
       <main className="container"> 
         <div className="text-center">
           {user && <h2>Usuario: {userNamebd}</h2>}
-        </div>
-        
+        </div>        
         <Navbar/>
         <Outlet />
         <footer className="footer text-center">
-          <h5>Este es el footer</h5>
+          <h5>Inventarios - {new Date().getFullYear()}</h5>
         </footer>
       </main>
     </>

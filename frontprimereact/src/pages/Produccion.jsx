@@ -89,10 +89,7 @@ const Produccion = () => {
     }
   };
 
-  const saveProductionDetail = async () => {
-    console.log("selectedProduction: ", selectedProduction, );
-    const { id:idDetalle } = newDetail;
-    const { idProduccion: productionId } = selectedProduction;
+  const saveProductionDetail = async () => {    
     const newDetail1 = {
       //id:idDetalle,
       idProduccion_fk:selectedProduction.idProduccion,

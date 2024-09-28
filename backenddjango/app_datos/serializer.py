@@ -26,8 +26,8 @@ class ProductoSerializer(serializers.ModelSerializer):
      
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['idCategoria_fk'] = instance.idCategoria_fk.nombCategoria
-        rep['idTipo_fk'] = instance.idTipo_fk.nombTipo
+        #rep['idCategoria_fk'] = instance.idCategoria_fk.nombCategoria
+        #rep['idTipo_fk'] = instance.idTipo_fk.nombTipo
         rep['idProveedor_fk'] = instance.idProveedor_fk.nombProveedor
         return rep
      

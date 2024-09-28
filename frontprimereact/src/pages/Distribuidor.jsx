@@ -113,6 +113,7 @@ const Distribuidor = () => {
       modal
       style={{ width: "400px" }}
       onHide={cerrarDialogo}
+      className="p-fluid"
     >
       <div className="p-field">
         <label htmlFor="nombre">Nombre</label>
@@ -138,7 +139,7 @@ const Distribuidor = () => {
           className="p-inputtext"
         />
       </div>
-      <div className="p-d-flex p-jc-between p-mt-4">
+      <div className="flex inline gap-3 mt-3">
         <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={cerrarDialogo} />
         <Button label="Guardar" icon="pi pi-check" className="p-button-primary" onClick={guardarDistribuidor} />
       </div>

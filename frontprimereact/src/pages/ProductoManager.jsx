@@ -33,6 +33,18 @@ const ProductoManager = () => {
     fetchSuppliers();
   }, []);
 
+  const obtenerNombreTipoProducto = (idTipo_fk) => {    
+    const tipoProducto = productTypes.find((tprod) => tprod.idtipo === idTipo_fk);
+  
+    return tipoProducto ? productTypes.nombProd : 'Desconocido';
+  };
+
+  const obtenerNombreCategorias = (idCategoria_fk) => {    
+    const categoriaProducto = categories.find((tcategoria) => tcategoria.idCategoria === idCategoria_fk);
+  
+    return categoriaProducto ? categories.nombCategoria : 'Desconocido';
+  };
+
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://127.0.0.1:8000/api/v1/producto/');
@@ -50,7 +62,7 @@ const ProductoManager = () => {
       console.error('Error fetching product types:', error);
     }
   };
-  console.log("productTypes: ",productTypes)
+  
 
   const fetchCategories = async () => {
     try {
@@ -208,8 +220,12 @@ const ProductoManager = () => {
 
         <DataTable value={products} responsiveLayout="scroll">
           <Column field="nombProd" header="Nombre"></Column>          
-          <Column field="idTipo_fk" header="Tipo de Producto" ></Column>
-          <Column field="idCategoria_fk" header="Categoría"></Column>
+          <Column field="idTipo_fk" header="Tipo de Producto" 
+          body={(rowData) => obtenerNombreTipoProducto(rowData.idProd_fk)}
+          ></Column>
+          <Column field="idCategoria_fk" header="Categoría"
+          body={(rowData) => obtenerNombreCategorias(rowData.idCategoria_fk)}
+          ></Column>
           <Column field="idProveedor_fk" header="Proveedor"></Column>
           <Column field="unidadProducto" header="Unidad de Medida"></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>

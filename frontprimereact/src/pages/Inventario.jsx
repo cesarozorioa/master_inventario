@@ -14,10 +14,10 @@ const Inventario = () => {
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState({
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        nombre: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+        nombProd: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
         unidad_medida: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-        tipo_producto: { value: null, matchMode: FilterMatchMode.EQUALS },
-        categoria: { value: null, matchMode: FilterMatchMode.EQUALS },
+        idTipo_fk: { value: null, matchMode: FilterMatchMode.EQUALS },
+        idCategoria_fk: { value: null, matchMode: FilterMatchMode.EQUALS },
         stock: { value: null, matchMode: FilterMatchMode.EQUALS }
     });
     const componentRef = useRef(null);
@@ -44,28 +44,58 @@ const Inventario = () => {
         fetchData();
     }, []);
 
-    const tipoProductoFilter = (options) => {
+    const obtenerNombreTipo = (idTipo_fk) => {    
+        const tiposP = tiposProducto.find((tprod) => tprod.idTipo === idTipo_fk);              
+        return tiposP ? tiposP.nombTipo : 'Desconocido';
+      };
+    const obtenerNombreCategoria = (idCategoria_fk) => {
+        
+        const categoriasP = categorias.find((cat) => cat.idCategoria === idCategoria_fk);
+        return categoriasP ? categoriasP.nombCategoria : 'Desconocida';
+    }
+
+    const tipoProductoFilterTemplate = (options) => {
+        console.log("options>>>>: ", options);
         return (
             <Dropdown
-                value={options.value}
+                value={options.value}                
                 options={tiposProducto}
-                onChange={(e) => options.filterCallback(e.value, options.index)}
+                onChange={(e) => options.filterApplyCallback(e.value, options.index)}
                 itemTemplate={(nombre) => <div>{nombre.nombTipo}</div>}
-                optionLabel="nombre"
+                valueTemplate={(nombre) => {
+                    if(nombre){
+        
+                      return <div>{nombre.nombTipo}</div>
+                  }
+                  else{
+                      return <div>Seleccione Tipo de Producto</div>
+                  }}}
+                filterBy="nombTipo"                 
+                optionLabel="nombTipo"
+                optionValue="idTipo"
                 placeholder="Seleccionar Tipo"
                 className="p-column-filter"
             />
         );
     };
 
-    const categoriaFilter = (options) => {
+    const categoriaFilterTemplate = (options) => {
         return (
             <Dropdown
                 value={options.value}
                 options={categorias}
-                onChange={(e) => options.filterCallback(e.value, options.index)}
+                onChange={(e) => options.filterApplyCallback(e.value, options.index)}
                 itemTemplate={(nombre) => <div>{nombre.nombCategoria}</div>}
-                optionLabel="nombre"
+                valueTemplate={(nombre) => {
+                    if (nombre) {
+                        return <div>{nombre.nombCategoria}</div>;
+                    } else {
+                        return <div>Seleccione Categoría</div>;
+                    }
+                }}
+                filterBy="nombCategoria"
+                optionLabel="nomCategoria"
+                optionValue="idCategoria"
                 placeholder="Seleccionar Categoría"
                 className="p-column-filter"
             />
@@ -109,34 +139,40 @@ const Inventario = () => {
                     rows={10} 
                     dataKey="idProducto" 
                     filters={filters} 
-                    filterDisplay="row"
+                    filterDisplay="menu"
                     onFilter={(e) => setFilters(e.filters)}
+                    emptyMessage="No se encontraron productos."
                 >
                     <Column 
                         field="nombProd" 
                         header="Nombre" 
                         filter 
                         filterPlaceholder="Buscar por nombre" 
+                        showFilterMenu={true}
                     />
                     <Column 
                         field="unidadProducto" 
                         header="Unidad de Medida" 
                         filter 
                         filterPlaceholder="Buscar por unidad" 
+                        showFilterMenu={false}
                     />
                     <Column 
                         field="idTipo_fk" 
+                        body={(rowData) => obtenerNombreTipo(rowData.idTipo_fk)}
                         header="Tipo de Producto" 
-                        filter 
-                        filterElement={tipoProductoFilter} 
-                        showFilterMenu={false}
-                    />
+                        filter                         
+                        filterElement={tipoProductoFilterTemplate} 
+                        showFilterMenu={true}
+                        
+                    />                    
                     <Column 
                         field="idCategoria_fk" 
+                        body={(rowData) => obtenerNombreCategoria(rowData.idCategoria_fk)}
                         header="Categoría" 
                         filter 
-                        filterElement={categoriaFilter} 
-                        showFilterMenu={false}
+                        filterElement={categoriaFilterTemplate} 
+                        showFilterMenu={true}
                     />
                     <Column 
                         field="stock" 
