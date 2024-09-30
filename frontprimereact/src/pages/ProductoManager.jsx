@@ -34,15 +34,15 @@ const ProductoManager = () => {
   }, []);
 
   const obtenerNombreTipoProducto = (idTipo_fk) => {    
-    const tipoProducto = productTypes.find((tprod) => tprod.idtipo === idTipo_fk);
-  
-    return tipoProducto ? productTypes.nombProd : 'Desconocido';
+    
+    const tipoProducto = productTypes.find((tprod) => tprod.value === idTipo_fk); 
+    
+    return tipoProducto ? tipoProducto.label : 'Desconocido';
   };
 
   const obtenerNombreCategorias = (idCategoria_fk) => {    
-    const categoriaProducto = categories.find((tcategoria) => tcategoria.idCategoria === idCategoria_fk);
-  
-    return categoriaProducto ? categories.nombCategoria : 'Desconocido';
+    const categoriaProducto = categories.find((tcategoria) => tcategoria.value === idCategoria_fk);  
+    return categoriaProducto ? categoriaProducto.label : 'Desconocido';
   };
 
   const fetchProducts = async () => {
@@ -221,7 +221,7 @@ const ProductoManager = () => {
         <DataTable value={products} responsiveLayout="scroll">
           <Column field="nombProd" header="Nombre"></Column>          
           <Column field="idTipo_fk" header="Tipo de Producto" 
-          body={(rowData) => obtenerNombreTipoProducto(rowData.idProd_fk)}
+          body={(rowData) => obtenerNombreTipoProducto(rowData.idTipo_fk)}
           ></Column>
           <Column field="idCategoria_fk" header="Categoría"
           body={(rowData) => obtenerNombreCategorias(rowData.idCategoria_fk)}

@@ -12,6 +12,7 @@ import Devolucion from "../pages/Devolucion";
 import Produccion from "../pages/Produccion";
 import Pedido from "../pages/Pedido";
 import Inventario from "../pages/Inventario";
+import RepIngresos from "../pages/RepIngresos";
 
 
 
@@ -68,6 +69,10 @@ export const router = createBrowserRouter([
               {
                 path: "/pedido",
                 element: <Pedido />,
+              },
+              {
+                path:"/repingresos",
+                element: <RepIngresos />,
               },
         
               {

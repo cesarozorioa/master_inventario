@@ -51,6 +51,18 @@ const Navbar = () => {
             command: () => {navigate('/pedido')},
         },
         {
+            label: 'Reportes',
+            icon: 'pi pi-chart-bar',
+            items: [
+                
+                {
+                    label: 'Ingresos',
+                    icon: 'pi pi-chart-bar',
+                    command: () => {navigate('/repingresos')},
+                },
+            ]
+        },
+        {
             label: 'Administracion  ',
             icon: 'pi pi-cog',
             items: [
