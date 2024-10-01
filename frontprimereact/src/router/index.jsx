@@ -13,6 +13,7 @@ import Produccion from "../pages/Produccion";
 import Pedido from "../pages/Pedido";
 import Inventario from "../pages/Inventario";
 import RepIngresos from "../pages/RepIngresos";
+import RepPedidos from "../pages/RepPedidos";
 
 
 
@@ -74,11 +75,16 @@ export const router = createBrowserRouter([
                 path:"/repingresos",
                 element: <RepIngresos />,
               },
+              {
+                path: "/reppedidos",
+                element: <RepPedidos />,
+              },
         
               {
                 path: "*",
                 element: <NotFound />,
               },
+
             ],
           },   
   

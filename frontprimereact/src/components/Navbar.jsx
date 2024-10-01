@@ -52,14 +52,19 @@ const Navbar = () => {
         },
         {
             label: 'Reportes',
-            icon: 'pi pi-chart-bar',
+            icon: 'pi pi-print',
             items: [
                 
                 {
                     label: 'Ingresos',
-                    icon: 'pi pi-chart-bar',
+                    icon: 'pi pi-book',
                     command: () => {navigate('/repingresos')},
                 },
+                {
+                    label: 'Pedidos',
+                    icon: 'pi pi-pen-to-square',
+                    command: () => {navigate('/reppedidos')},
+                }
             ]
         },
         {
