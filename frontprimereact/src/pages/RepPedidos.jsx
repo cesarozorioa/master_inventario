@@ -1,10 +1,11 @@
-
-import  { useState, useEffect } from 'react';
+import  { useState, useEffect, useRef } from 'react';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Toast } from 'primereact/toast';
+import '../impresion.css';
 import axios from 'axios';
 
 const RepPedidos = () => {
@@ -15,6 +16,7 @@ const RepPedidos = () => {
     const [pedidos, setPedidos] = useState([]);
     const [productos, setProductos] = useState({});
     const [detalles, setDetalles] = useState({});
+    const toast = useRef(null);
 
     // Cargar sucursales desde la API
     useEffect(() => {
@@ -57,18 +59,33 @@ const RepPedidos = () => {
 
     // Función para filtrar los pedidos
     const fetchPedidos = async () => {
+        if (!sucursalSeleccionada || !fechaInicial || !fechaFinal) {
+            toast.current.show({severity: 'warn', summary: 'Advertencia', detail: 'Por favor, seleccione un rango de fechas y una sucursal'});
+            return;
+        }
+      
         if (fechaInicial && fechaFinal && sucursalSeleccionada) {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/v1/pedido/', {
-                    params: {
-                        fechaInicial: fechaInicial.toISOString().split('T')[0],
-                        fechaFinal: fechaFinal.toISOString().split('T')[0],
-                        idSucursal: sucursalSeleccionada.idSucursal
-                    }
+                const response = await axios.get('http://127.0.0.1:8000/api/v1/pedido/');
+                console.log("response.data:>>>>>xxx ", response.data)
+                // Filtrar los pedidos obtenidos por sucursal seleccionada y rango de fechas
+               const pedidosFiltrados = response.data.filter(pedido => {
+                    const fechaPedido = new Date(pedido.fechaPedido);
+                    return (
+                        pedido.idSucursal_fk === sucursalSeleccionada.idSucursal &&
+                        fechaPedido >= fechaInicial && fechaPedido <= fechaFinal
+                    );
                 });
-                setPedidos(response.data);
+
+                if (pedidosFiltrados.length === 0) {
+                    toast.current.show({severity: 'warn', summary: 'Advertencia', detail: 'No se encontraron resultados'});
+                }
+
+                setPedidos(pedidosFiltrados);
+                console.log("pedidos filtrados:>>>> ", pedidosFiltrados)
             } catch (error) {
                 console.error('Error fetching pedidos:', error);
+                toast.current.show({severity: 'error', summary: 'Error', detail: 'Error al obtener datos. Por favor, intente de nuevo.'});
             }
         }
     };
@@ -88,10 +105,11 @@ const RepPedidos = () => {
     };
 
     return (
-        <div>
+        <div className='gap-4'>
+            <Toast ref={toast} />
             <h2>Reporte de Pedidos</h2>
 
-            <div className="p-grid">
+            <div className="flex gap-4 mb-4">
                 {/* Seleccionar sucursal */}
                 <div className="p-col-12 p-md-4">
                     <Dropdown
@@ -135,6 +153,10 @@ const RepPedidos = () => {
                 <Column field="fechaPedido" header="Fecha Pedido" />
                 <Column body={productosTemplate} header="Productos" />
             </DataTable>
+            { pedidos.length > 0 && <Button label="Imprimir" icon="pi pi-print" 
+            className="p-button-warning mt-3 "
+            onClick={() => window.print()                
+            } /> }
         </div>
     );
 };

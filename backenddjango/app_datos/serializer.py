@@ -39,7 +39,7 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rep['idSucursal_fk'] = instance.idSucursal_fk.nombSucursal
+       # rep['idSucursal_fk'] = instance.idSucursal_fk.nombSucursal
         return rep
     class Meta:
         model = Pedido

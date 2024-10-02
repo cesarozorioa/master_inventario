@@ -41,6 +41,10 @@ const Pedido = () => {
     console.log("producto: ",producto)
     return producto ? producto.nombProd : 'Desconocido';
   };
+  const obtenerNombreSucursal = (idSuc_fk) => {    
+    const sucursal = sucursales.find((suc) => suc.idSucursal === idSuc_fk);
+    return sucursal ? sucursal.nombSucursal : 'Desconocido';
+  };
 
   const fetchSucursales = async () => {
     try {
@@ -237,7 +241,10 @@ const Pedido = () => {
         
         <DataTable value={pedidos} responsiveLayout="scroll">
           <Column field="idPedido" header="ID"></Column>
-          <Column field="idSucursal_fk" header="Sucursal"></Column>
+          <Column field="idSucursal_fk" header="Sucursal" 
+           body={(rowData) => obtenerNombreSucursal(rowData.idSucursal_fk)}
+          ></Column>
+          
           <Column field="fechaPedido" header="Fecha"></Column>         
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
@@ -247,6 +254,7 @@ const Pedido = () => {
         <div className="field">
           <label htmlFor="sucursal">Sucursal</label>
           <Dropdown id="sucursal" value={newPedido.sucursal || newPedido.nombSucursal}
+
           onChange={(e) => setNewPedido({ ...newPedido, sucursal: e.value })}
           options={sucursales}
           itemTemplate={(name) => <div>{name.nombSucursal}</div>}
