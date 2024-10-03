@@ -105,7 +105,7 @@ const Inventario = () => {
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
         documentTitle: 'Inventario',
-        copyStyles: false,
+        copyStyles: true,
         print: async (printIframe) => {
             const document = printIframe.contentDocument;
             if (document) {

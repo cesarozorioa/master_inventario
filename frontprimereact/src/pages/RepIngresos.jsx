@@ -58,7 +58,7 @@ const RepIngresos = () => {
                     return fechaIngreso >= fechaInicial && fechaIngreso <= fechaFinal;
                 });
                 if (ingresosFiltrados.length === 0) {
-                    toast.current.show({severity: 'warn', summary: 'Advertencia', detail: 'No se encontraron resultados'});
+                    toast.current.show({severity: 'warn', summary: 'Advertencia', detail: 'No se encontraron Ingresos'});
                 }
                 setIngresos(ingresosFiltrados);
             } catch (error) {

@@ -68,7 +68,7 @@ const Navbar = () => {
                 {
                     label: 'Produccion',
                     icon: 'pi pi-server',
-                    command: () => {navigate('/repproduccion')},
+                    command: () => {navigate('/repproducciones')},
                 }
             ]
         },

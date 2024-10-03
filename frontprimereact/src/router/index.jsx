@@ -14,7 +14,7 @@ import Pedido from "../pages/Pedido";
 import Inventario from "../pages/Inventario";
 import RepIngresos from "../pages/RepIngresos";
 import RepPedidos from "../pages/RepPedidos";
-import RepProduccion from "../pages/RepProduccion";
+import RepProducciones from "../pages/RepProducciones";
 
 export const router = createBrowserRouter([
   {
@@ -79,8 +79,8 @@ export const router = createBrowserRouter([
                 element: <RepPedidos />,
               },
               {
-                path: "/repproduccion",
-                element: <RepProduccion />,
+                path: "/repproducciones",
+                element: <RepProducciones />,
               },
         
               {
