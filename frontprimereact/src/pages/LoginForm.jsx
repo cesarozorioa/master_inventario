@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
@@ -9,19 +9,29 @@ import { Toast } from "primereact/toast";
 import axios from "axios";
 import { useUserContext } from "../utils/UserContext";
 
+
 export default function LoginForm() {
 
-  const {setUser,setUsernamebd} = useUserContext()
+  const {setUser,user,setUsernamebd} = useUserContext()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+ const navigate = useNavigate();
+
   const toast = React.useRef(null);
+  useEffect(() => {
+    if (user) {
+      navigate("/inicio");
+    }
+  },[user,navigate]);
 
   const handleSubmit = async (e) => {
    
+   
     e.preventDefault();
-    setLoading(true);   
+    setLoading(true);    
+    
     
     try {
       const response = await axios.post("http://127.0.0.1:8000/acceso/login/", {
@@ -37,12 +47,15 @@ export default function LoginForm() {
         
         setUsernamebd(username);
         setUser(true);
-        
+              
+                
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Inicio de sesión exitoso",
-        });
+          life: 2000,
+        });        
+        
       } else {
         throw new Error("No se recibió token");
       }
@@ -54,10 +67,13 @@ export default function LoginForm() {
         detail: "Credenciales inválidas",
       });
     } finally {
+     
       setLoading(false);
-    }
+    }    
+    
+   
   };
-
+  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
