@@ -191,7 +191,7 @@ const Sucursal = () => {
               }
               required
               autoFocus
-              className="p-inputtext"
+              className="p-inputtext uppercase"
             />
           </div>
         </div>

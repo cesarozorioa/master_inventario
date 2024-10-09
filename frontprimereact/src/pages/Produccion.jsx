@@ -64,7 +64,6 @@ const Produccion = () => {
   };
   //console.log("productions Details:xxxxxx ", productionDetails);
   
-
   const saveProduction = async () => {
     
     const newProduction1 = {
@@ -98,7 +97,7 @@ const Produccion = () => {
     }
    
     try {
-      console.log("newDetail1: xxxx ", newDetail1);
+      
       if (newDetail.id) {
         await axios.put(`http://127.0.0.1:8000/api/v1/detalle_produccion/${newDetail.id}/`, newDetail1);
         toast.current.show({ severity: 'success', summary: 'Success', detail: 'Detalle Actualizado', life: 3000 });
@@ -113,8 +112,8 @@ const Produccion = () => {
       setNewDetail({});
       
     } catch (error) {
-      console.error('Error saving production detail:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error saving production detail', life: 3000 });
+      console.error('Error al grabar el detalle:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al grabar el detalle', life: 3000 });
     }
   };
 
@@ -124,10 +123,10 @@ const Produccion = () => {
       fetchProductions();
       setSelectedProduction(null);
       setProductionDetails([]);
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Production deleted', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Produccion borrada', life: 3000 });
     } catch (error) {
       console.error('Error deleting production:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error deleting production', life: 3000 });
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error no se puede borrar', life: 3000 });
     }
   };
 
@@ -220,13 +219,13 @@ const Produccion = () => {
       <Toast ref={toast} />      
       <div className="card">
         <h1>Producciónes Planta</h1>
-        <Button label="New Production" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />        
+        <Button label="Nueva Producción" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />        
         <DataTable value={productions} responsiveLayout="scroll">
           <Column field="idProduccion" header="ID"></Column>
           <Column field="idProd_fk" header="Product" 
           body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}/>
           <Column field="fechaProduccion" header="Production Date"></Column>
-          <Column field="cantProduccion" header="Quantity"></Column>
+          <Column field="cantProduccion" header="Cantidad"></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
@@ -248,14 +247,14 @@ const Produccion = () => {
           }}}
           optionLabel="name" 
           optionValue="id" 
-          placeholder="Select Product" />
+          placeholder="Seleccione Producto" />
         </div>
         <div className="field">
-          <label htmlFor="production_date">Production Date</label>
+          <label htmlFor="production_date">Fecha-Produccion</label>
           <Calendar id="production_date" value={new Date(newProduction.production_date || '')} onChange={(e) => setNewProduction({ ...newProduction, production_date: e.value.toISOString().slice(0, 10) })} showIcon />
         </div>
         <div className="field">
-          <label htmlFor="quantity">Quantity</label>
+          <label htmlFor="quantity">Cantidad</label>
           <InputNumber id="quantity" value={newProduction.quantity} onValueChange={(e) => setNewProduction({ ...newProduction, quantity: e.value })} />
         </div>
         <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduction} />
@@ -264,7 +263,7 @@ const Produccion = () => {
       {selectedProduction && (
         <div className="card mt-4">
           <h2>Productos usados en la Produccion #{selectedProduction.idProduccion}</h2>
-          <Button label="New Detail" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNewDetail} />
+          <Button label="Detalle Materia Prima" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNewDetail} />
           
           <DataTable value={productionDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
             <Column field="idProduccion_fk" header="No Produccion"></Column>
@@ -279,7 +278,7 @@ const Produccion = () => {
 
       <Dialog visible={detailDialog} style={{ width: '450px' }} header="Detalle Productos" modal className="p-fluid" onHide={() => setDetailDialog(false)}>
         <div className="field">
-          <label htmlFor="product">Product Used</label>
+          <label htmlFor="product">Materia Prima Usada</label>
           <Dropdown id="product" 
           value={newDetail.product || newDetail.nombProd}       
           itemTemplate={(name) => <div>{name.nombProd}</div>}
@@ -293,7 +292,7 @@ const Produccion = () => {
           onChange={(e) => setNewDetail({ ...newDetail, product: e.value })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
         </div>
         <div className="field">
-          <label htmlFor="quantity">Quantity Used</label>
+          <label htmlFor="quantity">Cantidad Usada</label>
           <InputNumber id="quantity" value={newDetail.quantity} onValueChange={(e) => setNewDetail({ ...newDetail, quantity: e.value })} />
         </div>
         <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProductionDetail} />
