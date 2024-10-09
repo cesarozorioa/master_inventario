@@ -43,11 +43,9 @@ export default function LoginForm() {
         console.log("Respuesta de inicio de sesión:", response.data);
         console.log("Respuesta de inicio de sesión:", response.data.token);
         // Guardar el token en el almacenamiento local o en el estado global
-        localStorage.setItem("token", response.data.token);
-        
+        localStorage.setItem("token", response.data.token);               
         setUsernamebd(username);
-        setUser(true);
-              
+        setUser(true);              
                 
         toast.current.show({
           severity: "success",

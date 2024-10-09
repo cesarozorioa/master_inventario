@@ -4,12 +4,16 @@ import { useUserContext } from "../utils/UserContext";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
+  //const token = localStorage.getItem('token');
   const { setUser, userNamebd } = useUserContext();
   const navigate = useNavigate();
   
   const [usuario, setUsuario] = useState(null);
   useEffect(() => {
-    setUsuario(userNamebd);
+    
+      setUsuario(userNamebd);
+    
+    
   }, [userNamebd]);
 
   // if(user){
@@ -139,6 +143,8 @@ const Navbar = () => {
       command: () => {
         setUser(false);        
         setUsuario("");
+        localStorage.removeItem("token");
+        localStorage.removeItem('userNamebd');
         localStorage.clear();
         navigate("/loginform");
       },
