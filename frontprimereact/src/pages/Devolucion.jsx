@@ -194,12 +194,12 @@ const Devolucion = () => {
                  id="motivoDevolucion"
                  name="motivoDevolucion"
                  value={motivoDevolucion || ""} 
+                 className='uppercase w-full'
                  onChange={(e) => setMotivoDevolucion(e.target.value)}
-                 />
-                 
+                 />                 
 
             </div>
-            <Button label="Guardar" onClick={guardarDevolucion} />
+            <Button label="Guardar" onClick={guardarDevolucion} className="p-button-success mt-3 centered" icon="pi pi-check" />
         </Dialog>
     );
 

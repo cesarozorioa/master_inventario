@@ -136,7 +136,7 @@ const Distribuidor = () => {
           onChange={(e) => setDistribuidor({ ...distribuidor, telef: e.target.value })}
           required
           autoFocus
-          className="p-inputtext"
+          className="p-inputtext uppercase"
         />
       </div>
       <div className="flex inline gap-3 mt-3">

@@ -207,17 +207,15 @@ const ProductoManager = () => {
       <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
     </React.Fragment>
-  );
-  
+  ); 
 
   return (
     <div>
       <Toast ref={toast} />
 
       <div className="card">
-        <h5>Gestión de Productos</h5>
+        <h3>Gestión de Productos</h3>
         <Button label="Nuevo Producto" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-
         <DataTable value={products} responsiveLayout="scroll">
           <Column field="nombProd" header="Nombre"></Column>          
           <Column field="idTipo_fk" header="Tipo de Producto" 
@@ -232,10 +230,10 @@ const ProductoManager = () => {
         </DataTable>
       </div>
 
-      <Dialog visible={productDialog} style={{ width: '450px' }} header="Detalles del Producto" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '450px' }} header="Detalles del Producto" modal className="p-fluid " footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="nombre">Nombre</label>
-          <InputText id="nombre" value={product.nombre || ''} onChange={(e) => onInputChange(e, 'nombre')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.nombre })} />
+          <InputText id="nombre" value={product.nombre || ''} onChange={(e) => onInputChange(e, 'nombre')} required autoFocus className= {classNames({ 'p-invalid': submitted && !product.nombre },"uppercase")} placeholder="Nombre del producto"  />
           {submitted && !product.nombre && <small className="p-error">El nombre es requerido.</small>}
         </div>
         <div className="field">
@@ -259,7 +257,7 @@ const ProductoManager = () => {
         </div>
         <div className="field">
           <label htmlFor="unidad_medida">Unidad de Medida</label>
-          <InputText id="unidad_medida" value={product.unidad_medida} onChange={(e) => onInputChange(e, 'unidad_medida')} required className={classNames({ 'p-invalid': submitted && !product.unidad_medida })} />
+          <InputText id="unidad_medida" value={product.unidad_medida} onChange={(e) => onInputChange(e, 'unidad_medida')} required className={classNames({ 'p-invalid': submitted && !product.unidad_medida }, "uppercase")} />
           {submitted && !product.unidad_medida && <small className="p-error">La unidad de medida es requerida.</small>}
         </div>
       </Dialog>

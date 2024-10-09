@@ -94,10 +94,10 @@ const Pedido = () => {
       fetchPedidos();
       setPedidoDialog(false);
       setNewPedido({});
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido saved', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 });
     } catch (error) {
-      console.error('Error saving pedido:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error saving production', life: 3000 });
+      console.error('Error al grabar el pedido:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al grabar el pedido', life: 3000 });
     }
   };
 
@@ -129,8 +129,8 @@ const Pedido = () => {
       setNewDetail({}); 
         
     } catch (error) {
-      console.error('Error saving pedido detail:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error saving production detail', life: 3000 });
+      console.error('Error al grabar el detalle del pedido:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error en el detalle del pedido', life: 3000 });
     }
   };
 
@@ -140,10 +140,10 @@ const Pedido = () => {
       fetchPedidos();
       setSelectedPedido(null);
       setPedidoDetails([]);
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido deleted', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido borrado', life: 3000 });
     } catch (error) {
-      console.error('Error deleting pedido:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error deleting production', life: 3000 });
+      console.error('Error pedido borrado:', error);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error pedido borrado', life: 3000 });
     }
   };
 
@@ -155,7 +155,7 @@ const Pedido = () => {
       toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido detail deleted', life: 3000 });
     } catch (error) {
       console.error('Error deleting pedido detail:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error deleting production detail', life: 3000 });
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error borrando el detalle del pedido', life: 3000 });
     }
   };
 
@@ -237,7 +237,7 @@ const Pedido = () => {
       
       <div className="card">
         <h1>Ingreso de Pedidos</h1>
-        <Button label="New Pedido" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
+        <Button label="Nuevo Pedido" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
         
         <DataTable value={pedidos} responsiveLayout="scroll">
           <Column field="idPedido" header="ID"></Column>
@@ -268,10 +268,10 @@ const Pedido = () => {
           }}}
           optionLabel="name" 
           optionValue="id" 
-          placeholder="Select Sucursal" />
+          placeholder="Seleccione Sucursal" />
         </div>
         <div className="field">
-          <label htmlFor="pedido_date">Pedido Date</label>
+          <label htmlFor="pedido_date">Fecha Pedido</label>
           <Calendar id="pedido_date" value={new Date(newPedido.pedido_date)} 
           onChange={(e) => setNewPedido({ ...newPedido, pedido_date: e.value.toISOString().slice(0, 10) })} showIcon />
         </div>
@@ -286,10 +286,10 @@ const Pedido = () => {
           
           <DataTable value={pedidoDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
             <Column field="idPed_fk" header="PEDIDO"></Column>
-            <Column field="idProd_fk" header="Product Pedido"
+            <Column field="idProd_fk" header="Producto Pedido"
             body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
             />
-            <Column field="cantidadPedido" header="Quantity Used"></Column>
+            <Column field="cantidadPedido" header="Cantidad Pedida"></Column>
             <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
           </DataTable>
         </div>
@@ -297,7 +297,7 @@ const Pedido = () => {
 
       <Dialog visible={detailDialog} style={{ width: '450px' }} header="Detalle Productos" modal className="p-fluid" onHide={() => setDetailDialog(false)}>
         <div className="field">
-          <label htmlFor="product">Product Pedidos</label>
+          <label htmlFor="product">Productos Pedidos</label>
           <Dropdown id="product" 
           value={newDetail.product || newDetail.nombProd}       
           itemTemplate={(name) => <div>{name.nombProd}</div>}
@@ -311,7 +311,7 @@ const Pedido = () => {
           onChange={(e) => setNewDetail({ ...newDetail, product: e.value })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
         </div>
         <div className="field">
-          <label htmlFor="quantity">Quantity Used</label>
+          <label htmlFor="quantity">Cantidad Pedida</label>
           <InputNumber id="quantity" value={newDetail.quantity} onValueChange={(e) => setNewDetail({ ...newDetail, quantity: e.value })} />
         </div>
         <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={savePedidoDetail} />
