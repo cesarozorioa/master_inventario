@@ -130,7 +130,7 @@ const IngresoProductos = () => {
     
     setIsEditing(false);
   };
-  console.log("productos: ", productos);
+  
 
   const editarIngreso = (ingreso) => {
     console.log("row data a editar: ", ingreso);
@@ -166,13 +166,13 @@ const IngresoProductos = () => {
         label="Editar"
         icon="pi pi-pencil"
         onClick={() => editarIngreso(rowData)}
-        className="p-button-warning"
+        className="p-button-warning mr-2"
       />
       <Button
         label="Eliminar"
         icon="pi pi-trash"
         onClick={() => eliminarIngreso(rowData.idIngreso)}
-        className="p-button-danger"
+        className="p-button-danger mr-2"
       />
     </React.Fragment>
   );

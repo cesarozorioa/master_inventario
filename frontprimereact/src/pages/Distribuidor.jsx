@@ -88,8 +88,8 @@ const Distribuidor = () => {
   const accionPlantilla = (rowData) => {    
     return (
       <div>
-        <Button label="Editar" icon="pi pi-pencil" onClick={() => abrirDialogo(true, rowData)} className="p-button-warning p-mr-2" />
-        <Button label="Eliminar" icon="pi pi-trash" onClick={() => eliminarDistribuidor(rowData.idProveedor)} className="p-button-danger" />
+        <Button label="Editar" icon="pi pi-pencil" onClick={() => abrirDialogo(true, rowData)} className="p-button-warning mr-2" />
+        <Button label="Eliminar" icon="pi pi-trash" onClick={() => eliminarDistribuidor(rowData.idProveedor)} className="p-button-danger mr-2" />
       </div>
     );
   };
