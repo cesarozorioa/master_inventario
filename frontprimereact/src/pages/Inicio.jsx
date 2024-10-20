@@ -4,17 +4,13 @@ import { useUserContext } from "../utils/UserContext";
 import RegisterForm from "./RegisterForm";
 
 const Inicio = () => {
-
-  const {userNamebd}=useUserContext();
+  const { userNamebd, isSuperuser } = useUserContext();
   return (
     <>
-    {
-      
-       <h1 className="text-center">Bienvenido a la aplicación {userNamebd}</h1>
-    }
-      <RegisterForm />
+      {<h1 className="text-center">Bienvenido a la aplicación {userNamebd}</h1>}
+      {isSuperuser && <RegisterForm />}
     </>
-  )
-}
+  );
+};
 
-export default Inicio
+export default Inicio;

@@ -6,6 +6,7 @@ export const UserContext = createContext();
 
  const UserProvider = ({ children }) => {
     const [user, setUser] = useState(false);
+    const [isSuperuser, setIsSuperuser] = useState(false);
     const [userNamebd, setUsernamebd] = useState(() => {
         const storedUserName = localStorage.getItem("userNamebd");
         return storedUserName ? storedUserName : null;     
@@ -19,7 +20,7 @@ export const UserContext = createContext();
       
 
     return (
-        <UserContext.Provider value={{ user, setUser, userNamebd, setUsernamebd }} >
+        <UserContext.Provider value={{ user, setUser, userNamebd, setUsernamebd, isSuperuser, setIsSuperuser }} >
             {children}
         </UserContext.Provider>
     );
