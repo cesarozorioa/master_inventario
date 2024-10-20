@@ -19,26 +19,11 @@ export default function LoginForm() {
 
   const toast = React.useRef(null);
   useEffect(() => {
-    if (user) {
-      const token = localStorage.getItem("token");
-      
-      axios
-          .get("http://127.0.0.1:8000/acceso/get_is_superuser", {
-            headers: {
-              Authorization: `Token ${token}`, // Aquí va el token en el encabezado
-            },
-          })
-          .then((response) => {
-            console.log("Es superusuario:", response.data.is_superuser);
-            setIsSuperuser(response.data.is_superuser);
-          })
-          .catch((error) => {
-            console.error("Error al verificar superusuario", error);
-          });
+    if (user) {               
 
       navigate("/inicio");
     }
-  }, [user, navigate,setIsSuperuser]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,6 +45,20 @@ export default function LoginForm() {
         localStorage.setItem("token", response.data.token);
         setUsernamebd(username);
         setUser(true);
+        const token = localStorage.getItem("token");
+        axios
+          .get("http://127.0.0.1:8000/acceso/get_is_superuser", {
+            headers: {
+              Authorization: `Token ${token}`, // Aquí va el token en el encabezado
+            },
+          })
+          .then((response) => {
+            console.log("Es superusuario en Login:", response.data.is_superuser);            
+            setIsSuperuser(response.data.is_superuser);
+          })
+          .catch((error) => {
+            console.error("Error al verificar superusuario", error);
+          });
         
         toast.current.show({
           severity: "success",

@@ -6,7 +6,9 @@ export const UserContext = createContext();
 
  const UserProvider = ({ children }) => {
     const [user, setUser] = useState(false);
-    const [isSuperuser, setIsSuperuser] = useState(false);
+    const [isSuperuser, setIsSuperuser] = useState(()=> {
+        const storedIsSuperuser = localStorage.getItem("isSuperuser");
+        return storedIsSuperuser ? storedIsSuperuser : false;  });
     const [userNamebd, setUsernamebd] = useState(() => {
         const storedUserName = localStorage.getItem("userNamebd");
         return storedUserName ? storedUserName : null;     
@@ -14,9 +16,13 @@ export const UserContext = createContext();
     // Guarda el valor en localStorage cuando cambie
     useEffect(() => {
         if (userNamebd) {
-          localStorage.setItem('userNamebd', userNamebd);
+          localStorage.setItem('userNamebd', userNamebd);         
+
         }
-      }, [userNamebd]);
+        if (isSuperuser) {
+          localStorage.setItem('isSuperuser', isSuperuser);         
+        } 
+      }, [userNamebd, isSuperuser]);
       
 
     return (
