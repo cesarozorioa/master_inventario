@@ -134,8 +134,8 @@ const Devolucion = () => {
 
     const accionPlantilla = (rowData) => (
         <React.Fragment>
-            <Button label="Editar" onClick={() => editarDevolucion(rowData)} className="p-button-warning" />
-            <Button label="Eliminar" onClick={() => eliminarDevolucion(rowData.idDevolucion)} className="p-button-danger" />
+            <Button label="Editar" onClick={() => editarDevolucion(rowData)} className="p-button-warning mr-2" icon="pi pi-pencil" />
+            <Button label="Eliminar" onClick={() => eliminarDevolucion(rowData.idDevolucion)} className="p-button-danger mr-2" icon="pi pi-trash" />
         </React.Fragment>
     );
 

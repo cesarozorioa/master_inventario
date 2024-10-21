@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
@@ -9,30 +8,27 @@ import { Toast } from "primereact/toast";
 import axios from "axios";
 import { useUserContext } from "../utils/UserContext";
 
-
 export default function LoginForm() {
-
-  const {setUser,user,setUsernamebd} = useUserContext()
+  const { setUser, user, setUsernamebd,setIsSuperuser } = useUserContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  //const [ setIsSuperuser] = useState(false);
 
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const toast = React.useRef(null);
   useEffect(() => {
-    if (user) {
+    if (user) {               
+
       navigate("/inicio");
     }
-  },[user,navigate]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
-   
-   
     e.preventDefault();
-    setLoading(true);    
-    
-    
+    setLoading(true);
+
     try {
       const response = await axios.post("http://127.0.0.1:8000/acceso/login/", {
         username,
@@ -40,20 +36,36 @@ export default function LoginForm() {
       });
 
       if (response.data.token) {
+        /* codigo para verificar si e superuser*/
+
         console.log("Respuesta de inicio de sesión:", response.data);
         console.log("Respuesta de inicio de sesión:", response.data.token);
+        
         // Guardar el token en el almacenamiento local o en el estado global
-        localStorage.setItem("token", response.data.token);               
+        localStorage.setItem("token", response.data.token);
         setUsernamebd(username);
-        setUser(true);              
-                
+        setUser(true);
+        const token = localStorage.getItem("token");
+        axios
+          .get("http://127.0.0.1:8000/acceso/get_is_superuser", {
+            headers: {
+              Authorization: `Token ${token}`, // Aquí va el token en el encabezado
+            },
+          })
+          .then((response) => {
+            console.log("Es superusuario en Login:", response.data.is_superuser);            
+            setIsSuperuser(response.data.is_superuser);
+          })
+          .catch((error) => {
+            console.error("Error al verificar superusuario", error);
+          });
+        
         toast.current.show({
           severity: "success",
           summary: "Éxito",
           detail: "Inicio de sesión exitoso",
           life: 2000,
-        });        
-        
+        });
       } else {
         throw new Error("No se recibió token");
       }
@@ -65,13 +77,9 @@ export default function LoginForm() {
         detail: "Credenciales inválidas",
       });
     } finally {
-     
       setLoading(false);
-    }    
-    
-   
+    }
   };
-  
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">

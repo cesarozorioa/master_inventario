@@ -38,3 +38,11 @@ def register(request):
 def profile(request):
     print (request.user)
     return Response("usted esta auntenticado con {}".format(request.user.username), status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_is_superuser(request):    
+    # Asegúrate de que el usuario está autenticado
+    if request.user.is_authenticated:
+        print(request.user.is_superuser)
+        return Response({'is_superuser': request.user.is_superuser})
+    return Response({'detail': 'Unauthorized'}, status=401)

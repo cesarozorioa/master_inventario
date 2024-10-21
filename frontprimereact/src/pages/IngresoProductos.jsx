@@ -45,14 +45,24 @@ const IngresoProductos = () => {
       });
     
   }, []);
-  
    
   // Filtrar ingresos por tipo de producto
   const filtrarIngresos = () => {
     console.log("filtrando por tipo de producto: ", tipoFiltro);
     if (tipoFiltro) {
-      return ingresos.filter((ingreso) => ingreso.productos === tipoFiltro);
+      // Filtrar los productos por el tipo seleccionado
+      return ingresos.filter((ingreso) => {
+        // Buscar el producto correspondiente al idProd_fk del ingreso
+        const producto = productos.find(
+          (producto) => producto.idProducto === ingreso.idProd_fk
+        );
+        
+        // Verificar si el tipo del producto coincide con el tipoFiltro
+        return producto && producto.idTipo_fk === tipoFiltro;
+      });
     }
+    
+    // Si no hay filtro, devolver todos los ingresos
     return ingresos;
   };
   
@@ -60,6 +70,12 @@ const IngresoProductos = () => {
     const producto = productos.find((prod) => prod.idProducto === idProd_fk);
     return producto ? producto.nombProd : 'Desconocido';
   };
+  const obtenerNombreTipo = (idProd_fk) => {   
+   
+    const producto = productos.find((prod) => prod.idProducto === idProd_fk);    
+    const tipoProd = tiposProducto.find((tp) => tp.idTipo === producto.idTipo_fk);
+    return tipoProd ? tipoProd.nombTipo : 'Desconocido';
+  }
 
   const abrirModal = () => {
     
@@ -114,7 +130,7 @@ const IngresoProductos = () => {
     
     setIsEditing(false);
   };
-  console.log("productos: ", productos);
+  
 
   const editarIngreso = (ingreso) => {
     console.log("row data a editar: ", ingreso);
@@ -150,13 +166,13 @@ const IngresoProductos = () => {
         label="Editar"
         icon="pi pi-pencil"
         onClick={() => editarIngreso(rowData)}
-        className="p-button-warning"
+        className="p-button-warning mr-2"
       />
       <Button
         label="Eliminar"
         icon="pi pi-trash"
         onClick={() => eliminarIngreso(rowData.idIngreso)}
-        className="p-button-danger"
+        className="p-button-danger mr-2"
       />
     </React.Fragment>
   );
@@ -213,17 +229,26 @@ const IngresoProductos = () => {
       </React.Fragment>
     );
   };
-
   const rightToolbarTemplate = () => {
     return (
       <div style={{ display: "flex", alignItems: "right" }}>
+        <div style={{ marginRight: "1rem" }}>
+        <RadioButton value={null}
+          name="tipoProducto"
+          onChange={(e) => setTipoFiltro(e.value)}
+          checked={tipoFiltro === null}
+          />
+        <label style={{ marginLeft: "0.5rem" }}>Todos</label>
+
+        </div>
+        
         {tiposProducto.map((tipo) => (
           <div key={tipo.idTipo} style={{ marginRight: "1rem" }}>
             <RadioButton
-              value={tipo.nombTipo}
+              value={tipo.idTipo}
               name="tipoProducto"
               onChange={(e) => setTipoFiltro(e.value)}
-              checked={tipo.nombTipo === tipoFiltro}
+              checked={tipo.idTipo === tipoFiltro}
             />
             <label style={{ marginLeft: "0.5rem" }}>{tipo.nombTipo}</label>
           </div>
@@ -238,6 +263,7 @@ const IngresoProductos = () => {
       <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
       <DataTable value={filtrarIngresos()}>
+        <Column field="idProd_fk" header="Tipo" body={(rowData) => obtenerNombreTipo(rowData.idProd_fk)} />        
         <Column field="idProd_fk" header="Producto" 
         body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />
         <Column field="cantIngreso" header="Cantidad" />

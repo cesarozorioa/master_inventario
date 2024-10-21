@@ -210,8 +210,8 @@ const Pedido = () => {
     return (
       <>
         <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editPedido(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => deletePedido(rowData)} />
-        <Button icon="pi pi-list" className="p-button-rounded p-button-info" onClick={() => selectPedido(rowData)} />
+        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mr-2" onClick={() => deletePedido(rowData)} />
+        <Button icon="pi pi-list" className="p-button-rounded p-button-info mr-2" onClick={() => selectPedido(rowData)} />
       </>
     );
   };

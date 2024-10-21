@@ -127,13 +127,13 @@ const Sucursal = () => {
           label="Editar"
           icon="pi pi-pencil"
           onClick={() => abrirDialogo(true, rowData)}
-          className="p-button-warning p-mr-2"
+          className="p-button-warning mr-2"
         />
         <Button
           label="Eliminar"
           icon="pi pi-trash"
           onClick={() => eliminarSucursal(rowData.idSucursal)}
-          className="p-button-danger"
+          className="p-button-danger mr-2"
         />
       </div>
     );

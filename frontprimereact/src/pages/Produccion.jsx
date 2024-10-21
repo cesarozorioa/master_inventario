@@ -193,8 +193,8 @@ const Produccion = () => {
     return (
       <>
         <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduction(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => deleteProduction(rowData)} />
-        <Button icon="pi pi-list" className="p-button-rounded p-button-info" onClick={() => selectProduction(rowData)} />
+        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mr-2" onClick={() => deleteProduction(rowData)} />
+        <Button icon="pi pi-list" className="p-button-rounded p-button-info mr-2" onClick={() => selectProduction(rowData)} />
       </>
     );
   };
@@ -221,10 +221,10 @@ const Produccion = () => {
         <h1>Producciónes Planta</h1>
         <Button label="Nueva Producción" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />        
         <DataTable value={productions} responsiveLayout="scroll">
-          <Column field="idProduccion" header="ID"></Column>
-          <Column field="idProd_fk" header="Product" 
+          <Column field="idProduccion" header="Nro Produccion"></Column>
+          <Column field="idProd_fk" header="Producto" 
           body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}/>
-          <Column field="fechaProduccion" header="Production Date"></Column>
+          <Column field="fechaProduccion" header="Fecha Producción"></Column>
           <Column field="cantProduccion" header="Cantidad"></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
