@@ -7,25 +7,22 @@ import './Navbar.css';
 
 const Navbar = () => {
   //const token = localStorage.getItem('token');
-  const { setUser, userNamebd } = useUserContext();
-  const [darkMode, setDarkMode] = useState(false);
+  const { setUser, userNamebd, darkMode, setDarkMode } = useUserContext();  
   const navigate = useNavigate();  
   const [usuario, setUsuario] = useState(null);
   const toggleTheme = () => {
     setDarkMode(!darkMode);
+    
 };
+  
   useEffect(() => {
+    localStorage.setItem('theme', darkMode ? 'dark' : 'light')
     const themeLink = document.getElementById('app-theme');
-    if (darkMode) {
-        themeLink.setAttribute('href', 'https://unpkg.com/primereact/resources/themes/lara-dark-indigo/theme.css');
-    } else {
-        themeLink.setAttribute('href', 'https://unpkg.com/primereact/resources/themes/lara-light-indigo/theme.css');
-    }
+    themeLink.setAttribute('href', darkMode ? 'https://unpkg.com/primereact/resources/themes/lara-dark-indigo/theme.css' : 'https://unpkg.com/primereact/resources/themes/lara-light-indigo/theme.css');    
+      setUsuario(userNamebd);  
+      setDarkMode(darkMode);
     
-      setUsuario(userNamebd);
-    
-    
-  }, [userNamebd, darkMode]);
+  }, [userNamebd, darkMode,setDarkMode]);
 
   // if(user){
 

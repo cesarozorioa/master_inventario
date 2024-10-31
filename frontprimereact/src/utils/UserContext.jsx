@@ -13,6 +13,8 @@ export const UserContext = createContext();
         const storedUserName = localStorage.getItem("userNamebd");
         return storedUserName ? storedUserName : null;     
     });
+
+    const [darkMode, setDarkMode] = useState(false);
     // Guarda el valor en localStorage cuando cambie
     useEffect(() => {
         if (userNamebd) {
@@ -22,11 +24,14 @@ export const UserContext = createContext();
         if (isSuperuser) {
           localStorage.setItem('isSuperuser', isSuperuser);         
         } 
-      }, [userNamebd, isSuperuser]);
+        if (darkMode) {
+          localStorage.setItem('darkMode', darkMode);         
+        }
+      }, [userNamebd, isSuperuser, darkMode]);
       
 
     return (
-        <UserContext.Provider value={{ user, setUser, userNamebd, setUsernamebd, isSuperuser, setIsSuperuser }} >
+        <UserContext.Provider value={{ user, setUser, userNamebd, setUsernamebd, isSuperuser, setIsSuperuser, darkMode, setDarkMode }} >
             {children}
         </UserContext.Provider>
     );
