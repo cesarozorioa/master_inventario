@@ -262,7 +262,7 @@ const IngresoProductos = () => {
     <div>
       <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
-      <DataTable value={filtrarIngresos()}>
+      <DataTable value={filtrarIngresos()} paginator rows={5}>
         <Column field="idProd_fk" header="Tipo" body={(rowData) => obtenerNombreTipo(rowData.idProd_fk)} />        
         <Column field="idProd_fk" header="Producto" 
         body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />

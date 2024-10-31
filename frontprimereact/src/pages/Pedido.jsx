@@ -239,7 +239,7 @@ const Pedido = () => {
         <h1>Ingreso de Pedidos</h1>
         <Button label="Nuevo Pedido" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
         
-        <DataTable value={pedidos} responsiveLayout="scroll">
+        <DataTable value={pedidos} responsiveLayout="scroll" paginator rows={5} >
           <Column field="idPedido" header="ID"></Column>
           <Column field="idSucursal_fk" header="Sucursal" 
            body={(rowData) => obtenerNombreSucursal(rowData.idSucursal_fk)}

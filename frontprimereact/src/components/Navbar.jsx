@@ -2,19 +2,30 @@ import { Menubar } from "primereact/menubar";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../utils/UserContext";
 import { useEffect, useState } from "react";
+import { Button } from 'primereact/button';
+import './Navbar.css';
 
 const Navbar = () => {
   //const token = localStorage.getItem('token');
   const { setUser, userNamebd } = useUserContext();
-  const navigate = useNavigate();
-  
+  const [darkMode, setDarkMode] = useState(false);
+  const navigate = useNavigate();  
   const [usuario, setUsuario] = useState(null);
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+};
   useEffect(() => {
+    const themeLink = document.getElementById('app-theme');
+    if (darkMode) {
+        themeLink.setAttribute('href', 'https://unpkg.com/primereact/resources/themes/lara-dark-indigo/theme.css');
+    } else {
+        themeLink.setAttribute('href', 'https://unpkg.com/primereact/resources/themes/lara-light-indigo/theme.css');
+    }
     
       setUsuario(userNamebd);
     
     
-  }, [userNamebd]);
+  }, [userNamebd, darkMode]);
 
   // if(user){
 
@@ -152,13 +163,23 @@ const Navbar = () => {
     {
       label: usuario,
       icon: "pi pi-user",
-    },
+    },    
+        
   ];
+
+  const themeToggleButton = (
+    <Button
+        label={darkMode ? "Modo Claro" : "Modo Oscuro"}
+        icon={darkMode ? "pi pi-sun" : "pi pi-moon"}
+        onClick={toggleTheme}
+        className="p-button-rounded p-button-text"
+    />
+);
   return (
     <>
       <nav>
-        <div className="card">
-          <Menubar model={items} />
+        <div className="card navbar-container ">
+          <Menubar model={items} end={themeToggleButton} />             
         </div>
       </nav>
     </>

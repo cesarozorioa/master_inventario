@@ -78,7 +78,7 @@ class Detalle_PedidoViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)    
     # Obtén el id del producto desde el serializer data
-        id_producto = serializer.data['idProd_fk']  # Asegúrate de que este campo devuelva el ID del producto, no la instancia
+        id_producto = serializer.data['idProd_fk']  # Confirma de que este campo devuelva el ID del producto, no la instancia
      # Busca el producto usando el ID
         producto = Producto.objects.get(idProducto=id_producto)    
     # Si estás actualizando la cantidad del ingreso, deberías ajustar el stock del producto.   

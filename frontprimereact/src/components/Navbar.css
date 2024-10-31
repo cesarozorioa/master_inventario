@@ -1,0 +1,11 @@
+/* Navbar.css */
+.navbar-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+body {
+    padding-top: 60px; /* Ajustar este valor según la altura del Menubar para evitar que el contenido lo cubra */
+}

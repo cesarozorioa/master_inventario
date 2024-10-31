@@ -67,7 +67,7 @@ const RepPedidos = () => {
         if (fechaInicial && fechaFinal && sucursalSeleccionada) {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/v1/pedido/');
-                console.log("response.data:>>>>>xxx ", response.data)
+                
                 // Filtrar los pedidos obtenidos por sucursal seleccionada y rango de fechas
                const pedidosFiltrados = response.data.filter(pedido => {
                     const fechaPedido = new Date(pedido.fechaPedido);
@@ -81,8 +81,7 @@ const RepPedidos = () => {
                     toast.current.show({severity: 'warn', summary: 'Advertencia', detail: 'No se encontraron resultados'});
                 }
 
-                setPedidos(pedidosFiltrados);
-                console.log("pedidos filtrados:>>>> ", pedidosFiltrados)
+                setPedidos(pedidosFiltrados);                
             } catch (error) {
                 console.error('Error fetching pedidos:', error);
                 toast.current.show({severity: 'error', summary: 'Error', detail: 'Error al obtener datos. Por favor, intente de nuevo.'});

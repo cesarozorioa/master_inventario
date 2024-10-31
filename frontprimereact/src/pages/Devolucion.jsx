@@ -236,7 +236,7 @@ const Devolucion = () => {
         <div>
             <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
-            <DataTable value={filtrarDevoluciones()}>                
+            <DataTable value={filtrarDevoluciones()} paginator rows={5} >                
                 <Column field="idProd_fk" header="Producto" body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />           
                 <Column field="cantDevuelta" header="Cantidad" />
                 <Column field="fechaDevolucion" header="Fecha de Ingreso" />

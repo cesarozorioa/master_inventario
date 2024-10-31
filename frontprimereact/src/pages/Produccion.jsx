@@ -220,7 +220,7 @@ const Produccion = () => {
       <div className="card">
         <h1>Producciónes Planta</h1>
         <Button label="Nueva Producción" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />        
-        <DataTable value={productions} responsiveLayout="scroll">
+        <DataTable value={productions} responsiveLayout="scroll" paginator rows={5} >
           <Column field="idProduccion" header="Nro Produccion"></Column>
           <Column field="idProd_fk" header="Producto" 
           body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}/>

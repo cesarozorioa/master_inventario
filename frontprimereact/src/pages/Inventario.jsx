@@ -55,7 +55,7 @@ const Inventario = () => {
     }
 
     const tipoProductoFilterTemplate = (options) => {
-        console.log("options>>>>: ", options);
+        
         return (
             <Dropdown
                 value={options.value}                
@@ -106,6 +106,7 @@ const Inventario = () => {
         content: () => componentRef.current,
         documentTitle: 'Inventario',
         copyStyles: true,
+
         print: async (printIframe) => {
             const document = printIframe.contentDocument;
             if (document) {
@@ -113,6 +114,7 @@ const Inventario = () => {
                 const header = document.createElement('div');
                 header.innerHTML = `<h2>Inventario - Fecha y Hora: ${fecha}</h2>`;
                 document.body.insertBefore(header, document.body.firstChild);
+
             }
             await new Promise((resolve) => setTimeout(resolve, 500));
             if (printIframe.contentWindow) {
@@ -136,7 +138,7 @@ const Inventario = () => {
                 <DataTable 
                     value={productos} 
                     paginator 
-                    rows={10} 
+                    rows={5} 
                     dataKey="idProducto" 
                     filters={filters} 
                     filterDisplay="menu"
