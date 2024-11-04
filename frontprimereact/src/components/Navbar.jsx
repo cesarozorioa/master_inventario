@@ -11,8 +11,7 @@ const Navbar = () => {
   const navigate = useNavigate();  
   const [usuario, setUsuario] = useState(null);
   const toggleTheme = () => {
-    setDarkMode(!darkMode);
-    
+    setDarkMode(!darkMode);    
 };
   
   useEffect(() => {
@@ -26,8 +25,7 @@ const Navbar = () => {
 
   // if(user){
 
-  const items = [
-    
+  const items = [    
     
     {
       label: "Inicio",

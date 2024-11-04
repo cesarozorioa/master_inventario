@@ -29,16 +29,12 @@ export const router = createBrowserRouter([
             {
                 path: "/loginform", 
                 element: <LoginForm />,
-                errorElement: <NotFound />,
-                /*index: true,
-                element: <LoginForm />,*/
-                
+                errorElement: <NotFound />,                            
             },
             {
                 path: "/inicio",
                 element: <LayoutPrivate />,
-                errorElement: <NotFound />,
-                         
+                errorElement: <NotFound />,                         
                 children: [
                     {
                         index: true,
@@ -102,8 +98,7 @@ export const router = createBrowserRouter([
                         element: <NotFound />,
                     }
                 ]
-            },
-            
+            },           
 
         ],
 

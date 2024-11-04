@@ -24,8 +24,7 @@ export const LayoutPrivate = () => {
     }
     
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [setDarkMode]);
-  
+}, [setDarkMode]);   
    console.log("usernamebd",userNamebd)
   return (    
     <Outlet />
