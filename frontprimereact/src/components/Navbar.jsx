@@ -151,6 +151,8 @@ const Navbar = () => {
         setUsuario("");
         localStorage.removeItem("token");
         localStorage.removeItem('userNamebd');
+        localStorage.removeItem('isSuperuser');
+        localStorage.removeItem('darkMode');
         localStorage.clear();
         navigate("/loginform");
       },
