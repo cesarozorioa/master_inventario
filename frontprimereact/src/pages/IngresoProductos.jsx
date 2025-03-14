@@ -70,9 +70,11 @@ const IngresoProductos = () => {
     const producto = productos.find((prod) => prod.idProducto === idProd_fk);
     return producto ? producto.nombProd : 'Desconocido';
   };
-  const obtenerNombreTipo = (idProd_fk) => {   
+  const obtenerNombreTipo = (idProd_fk) => {  
+    console.log("idProd_fk: ", idProd_fk); 
    
-    const producto = productos.find((prod) => prod.idProducto === idProd_fk);    
+    const producto = productos.find((prod) => prod.idProducto === idProd_fk);  
+    if(!producto) return 'Desconocido';
     const tipoProd = tiposProducto.find((tp) => tp.idTipo === producto.idTipo_fk);
     return tipoProd ? tipoProd.nombTipo : 'Desconocido';
   }
