@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect } from "react";
+import "../styles/IngresoProductos.css";
 import "primeicons/primeicons.css";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -43,9 +43,8 @@ const IngresoProductos = () => {
       .catch((error) => {
         console.error("Error al obtener los tipos de producto:", error);
       });
-    
   }, []);
-   
+
   // Filtrar ingresos por tipo de producto
   const filtrarIngresos = () => {
     console.log("filtrando por tipo de producto: ", tipoFiltro);
@@ -56,36 +55,34 @@ const IngresoProductos = () => {
         const producto = productos.find(
           (producto) => producto.idProducto === ingreso.idProd_fk
         );
-        
+
         // Verificar si el tipo del producto coincide con el tipoFiltro
         return producto && producto.idTipo_fk === tipoFiltro;
       });
     }
-    
+
     // Si no hay filtro, devolver todos los ingresos
     return ingresos;
   };
-  
+
   const obtenerNombreProducto = (idProd_fk) => {
     const producto = productos.find((prod) => prod.idProducto === idProd_fk);
-    return producto ? producto.nombProd : 'Desconocido';
+    return producto ? producto.nombProd : "Desconocido";
   };
-  const obtenerNombreTipo = (idProd_fk) => {  
-    console.log("idProd_fk: ", idProd_fk); 
-   
-    const producto = productos.find((prod) => prod.idProducto === idProd_fk);  
-    if(!producto) return 'Desconocido';
-    const tipoProd = tiposProducto.find((tp) => tp.idTipo === producto.idTipo_fk);
-    return tipoProd ? tipoProd.nombTipo : 'Desconocido';
-  }
+  const obtenerNombreTipo = (idProd_fk) => {
+    const producto = productos.find((prod) => prod.idProducto === idProd_fk);
+    if (!producto) return "Desconocido";
+    const tipoProd = tiposProducto.find(
+      (tp) => tp.idTipo === producto.idTipo_fk
+    );
+    return tipoProd ? tipoProd.nombTipo : "Desconocido";
+  };
 
   const abrirModal = () => {
-    
     setModalVisible(true);
     setSelectedProducto(null);
     setCantidad(null);
     setFechaIngreso(new Date());
-    
   };
 
   const guardarIngreso = () => {
@@ -119,20 +116,18 @@ const IngresoProductos = () => {
         });
     } else {
       axios
-        .post("http://127.0.0.1:8000/api/v1/ingreso/",nuevoIngreso)
+        .post("http://127.0.0.1:8000/api/v1/ingreso/", nuevoIngreso)
         .then((response) => {
           setIngresos([...ingresos, response.data]);
           setModalVisible(false);
         })
         .catch((error) => {
           console.error("Error en el servidor:", error.response.data);
-          
         });
     }
-    
+
     setIsEditing(false);
   };
-  
 
   const editarIngreso = (ingreso) => {
     console.log("row data a editar: ", ingreso);
@@ -204,6 +199,14 @@ const IngresoProductos = () => {
           optionLabel="nombre"
         />
       </div>
+      {/*Unidad de Medida*/}
+      {selectedProducto && (
+        <div className="p-field">
+          <label>Unidad de Medida: {selectedProducto.unidadProducto}</label>
+        </div>
+      )}
+      {/*Unidad de Medida*/}
+
       <div className="p-field">
         <label htmlFor="cantidad">Cantidad</label>
         <InputNumber
@@ -219,7 +222,11 @@ const IngresoProductos = () => {
           showIcon
         />
       </div>
-      <Button label="Guardar" onClick={guardarIngreso} />
+      <Button
+        label="Guardar"
+        className="p-button-success mt-3 centered"
+        onClick={guardarIngreso}
+      />
     </Dialog>
   );
 
@@ -235,15 +242,15 @@ const IngresoProductos = () => {
     return (
       <div style={{ display: "flex", alignItems: "right" }}>
         <div style={{ marginRight: "1rem" }}>
-        <RadioButton value={null}
-          name="tipoProducto"
-          onChange={(e) => setTipoFiltro(e.value)}
-          checked={tipoFiltro === null}
+          <RadioButton
+            value={null}
+            name="tipoProducto"
+            onChange={(e) => setTipoFiltro(e.value)}
+            checked={tipoFiltro === null}
           />
-        <label style={{ marginLeft: "0.5rem" }}>Todos</label>
-
+          <label style={{ marginLeft: "0.5rem" }}>Todos</label>
         </div>
-        
+
         {tiposProducto.map((tipo) => (
           <div key={tipo.idTipo} style={{ marginRight: "1rem" }}>
             <RadioButton
@@ -258,16 +265,22 @@ const IngresoProductos = () => {
       </div>
     );
   };
-  
 
   return (
     <div>
       <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate} />
 
       <DataTable value={filtrarIngresos()} paginator rows={5}>
-        <Column field="idProd_fk" header="Tipo" body={(rowData) => obtenerNombreTipo(rowData.idProd_fk)} />        
-        <Column field="idProd_fk" header="Producto" 
-        body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)} />
+        <Column
+          field="idProd_fk"
+          header="Tipo"
+          body={(rowData) => obtenerNombreTipo(rowData.idProd_fk)}
+        />
+        <Column
+          field="idProd_fk"
+          header="Producto"
+          body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
+        />
         <Column field="cantIngreso" header="Cantidad" />
         <Column field="fechaIngreso" header="Fecha de Ingreso" />
         <Column body={accionPlantilla} header="Acciones" />

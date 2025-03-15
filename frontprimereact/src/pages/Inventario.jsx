@@ -152,13 +152,7 @@ const Inventario = () => {
                         filterPlaceholder="Buscar por nombre" 
                         showFilterMenu={true}
                     />
-                    <Column 
-                        field="unidadProducto" 
-                        header="Unidad de Medida" 
-                        filter 
-                        filterPlaceholder="Buscar por unidad" 
-                        showFilterMenu={false}
-                    />
+                    
                     <Column 
                         field="idTipo_fk" 
                         body={(rowData) => obtenerNombreTipo(rowData.idTipo_fk)}
@@ -181,6 +175,13 @@ const Inventario = () => {
                         header="Stock" 
                         filter 
                         filterPlaceholder="Buscar por stock" 
+                    />
+                    <Column 
+                        field="unidadProducto" 
+                        header="Unidad de Medida" 
+                        filter 
+                        filterPlaceholder="Buscar por unidad" 
+                        showFilterMenu={false}
                     />
                 </DataTable>
             </div>

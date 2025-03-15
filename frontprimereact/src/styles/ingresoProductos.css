@@ -1,0 +1,16 @@
+.p-field{
+    margin-bottom: 1rem;
+    
+}
+.devolucion_medida{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.devolucion_medida label{
+    margin-left: 1rem;
+}
+.boton_devolucion{
+    display: block;
+    margin: 0 auto;
+}
