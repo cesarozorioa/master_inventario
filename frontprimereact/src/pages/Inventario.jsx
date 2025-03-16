@@ -138,8 +138,8 @@ const Inventario = () => {
                 <DataTable 
                     value={productos} 
                     paginator 
-                    rows={5} 
-                    dataKey="idProducto" 
+                    rows={10} 
+                    dataKey="idCategoria" 
                     filters={filters} 
                     filterDisplay="menu"
                     onFilter={(e) => setFilters(e.filters)}
