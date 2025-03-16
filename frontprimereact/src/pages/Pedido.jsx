@@ -276,7 +276,7 @@ const Pedido = () => {
           onChange={(e) => setNewPedido({ ...newPedido, pedido_date: e.value.toISOString().slice(0, 10) })} showIcon />
         </div>
        
-        <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={savePedido} />
+        <Button label="Save" icon="pi pi-check" className="p-button-success mt-3 centered" onClick={savePedido} />
       </Dialog>
 
       {selectedPedido && (
@@ -308,13 +308,22 @@ const Pedido = () => {
           else{
               return <div>Seleccione Producto</div>
           }}}
-          onChange={(e) => setNewDetail({ ...newDetail, product: e.value })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
+          onChange={(e) => setNewDetail({ ...newDetail, product: e.value, unidadProducto: e.value.unidadProducto })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
         </div>
+        {console.log("newDetail.product: ",newDetail.product)}
+        {console.log("Unidad de Medida: ",newDetail.unidadProducto)}
         <div className="field">
           <label htmlFor="quantity">Cantidad Pedida</label>
           <InputNumber id="quantity" value={newDetail.quantity} onValueChange={(e) => setNewDetail({ ...newDetail, quantity: e.value })} />
         </div>
-        <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={savePedidoDetail} />
+        {/*Unidad de Medida*/}
+      {newDetail && (
+        <div className="p-field">
+          <label>Unidad de Medida: {newDetail.unidadProducto}</label>
+        </div>
+      )}
+      {/*Unidad de Medida*/}
+        <Button label="Guardar" icon="pi pi-check" className="p-button-success mt-3 centered" onClick={savePedidoDetail} />
       </Dialog>
     </div>
   );

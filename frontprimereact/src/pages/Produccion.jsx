@@ -481,6 +481,14 @@ const Produccion = () => {
             }
           />
         </div>
+        {/*Unidad de Medida*/}       
+
+        {newDetail && newDetail.product && newDetail.product.unidadProducto && (
+          <div className="p-field">
+            <label>Unidad de Medida: {newDetail.product.unidadProducto}</label>
+          </div>)}
+        {/*Unidad de Medida*/}
+      
         <Button
           label="Grabar"
           icon="pi pi-check"
