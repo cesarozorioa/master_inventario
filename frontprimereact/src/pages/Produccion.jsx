@@ -29,6 +29,15 @@ const Produccion = () => {
     const producto = products.find((prod) => prod.idProducto === idProd_fk);
     return producto ? producto.nombProd : "Desconocido";
   };
+  const filtrarProductosTipo2 = () => {
+    
+    return products.filter((product) => product.idTipo_fk === 2);
+  };
+
+  const filtrarProductosTipo1 = () => {
+    
+    return products.filter((product) => product.idTipo_fk === 1);
+  };
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
@@ -352,7 +361,8 @@ const Produccion = () => {
                 unidadProducto: e.value.unidadProducto,
               })
             }
-            options={products}
+            options={filtrarProductosTipo2()}
+            
             itemTemplate={(name) => <div>{name.nombProd}</div>}
             valueTemplate={(name) => {
               if (name) {
@@ -466,7 +476,7 @@ const Produccion = () => {
               }
             }}
             onChange={(e) => setNewDetail({ ...newDetail, product: e.value })}
-            options={products}
+            options={filtrarProductosTipo1()}
             optionLabel="name"
             placeholder="Seleccione Producto"
           />
