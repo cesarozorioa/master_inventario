@@ -139,7 +139,7 @@ const Inventario = () => {
                     value={productos} 
                     paginator 
                     rows={10} 
-                    dataKey="idCategoria" 
+                    dataKey="idTipo" 
                     filters={filters} 
                     filterDisplay="menu"
                     onFilter={(e) => setFilters(e.filters)}
