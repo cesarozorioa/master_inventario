@@ -5,15 +5,17 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
-import { Dropdown } from "primereact/dropdown";
+/*import { Dropdown } from "primereact/dropdown";*/
 import { Calendar } from "primereact/calendar";
 import { RadioButton } from "primereact/radiobutton";
 import { InputNumber } from "primereact/inputnumber";
 import { Toolbar } from "primereact/toolbar";
+import { AutoComplete } from "primereact/autocomplete";
 import axios from "axios";
 
 const IngresoProductos = () => {
   const [productos, setProductos] = useState([]);
+  const [filteredProductos, setFilteredProductos] = useState([]);
   const [ingresos, setIngresos] = useState([]);
   const [selectedProducto, setSelectedProducto] = useState(null);
   const [cantidad, setCantidad] = useState(null);
@@ -47,7 +49,7 @@ const IngresoProductos = () => {
 
   // Filtrar ingresos por tipo de producto
   const filtrarIngresos = () => {
-    console.log("filtrando por tipo de producto: ", tipoFiltro);
+    console.log("filtrando por tipo de producto codigo: ", tipoFiltro);
     if (tipoFiltro) {
       // Filtrar los productos por el tipo seleccionado
       return ingresos.filter((ingreso) => {
@@ -79,8 +81,15 @@ const IngresoProductos = () => {
   };
   const obtenerUnidadProducto = (idProd_fk) => {
     const producto = productos.find((prod) => prod.idProducto === idProd_fk);
-    if(!producto) return "Desconocido";
+    if (!producto) return "Desconocido";
     return producto ? producto.unidadProducto : "Desconocido";
+  };
+  const buscarProducto = (event) => {
+    const query = event.query.toLowerCase();
+    const resultados = productos.filter((producto) =>
+      producto.nombProd.toLowerCase().includes(query)
+    );
+    setFilteredProductos(resultados);
   };
 
   const abrirModal = () => {
@@ -188,20 +197,13 @@ const IngresoProductos = () => {
     >
       <div className="p-field">
         <label htmlFor="producto">Producto</label>
-        <Dropdown
-          options={productos}
+        <AutoComplete
           value={selectedProducto}
-          itemTemplate={(nombre) => <div>{nombre.nombProd}</div>}
-          valueTemplate={(nombre) => {
-            if (nombre) {
-              return <div>{nombre.nombProd}</div>;
-            } else {
-              return <div>Seleccione Producto</div>;
-            }
-          }}
+          suggestions={filteredProductos}
+          completeMethod={buscarProducto}
+          field="nombProd"
           onChange={(e) => setSelectedProducto(e.value)}
           placeholder="Seleccione Producto"
-          optionLabel="nombre"
         />
       </div>
       {/*Unidad de Medida*/}
@@ -287,11 +289,11 @@ const IngresoProductos = () => {
           body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
         />
         <Column field="cantIngreso" header="Cantidad" />
-        <Column 
-          field="unidadProducto" 
+        <Column
+          field="unidadProducto"
           header="Unidad"
           body={(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
-          />
+        />
         <Column field="fechaIngreso" header="Fecha de Ingreso" />
         <Column body={accionPlantilla} header="Acciones" />
       </DataTable>
