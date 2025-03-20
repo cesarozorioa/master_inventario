@@ -29,14 +29,18 @@ const Produccion = () => {
     const producto = products.find((prod) => prod.idProducto === idProd_fk);
     return producto ? producto.nombProd : "Desconocido";
   };
+
+  const obtenerUnidadProducto = (idProd_fk) => {
+    const producto = products.find((prod) => prod.idProducto === idProd_fk);
+    if (!producto) return "Desconocido";
+    return producto ? producto.unidadProducto : "Desconocido";
+  };
   const filtrarProductosTipo2 = () => {
-    
-    return products.filter((product) => product.idTipo_fk === 2);
+    return products.filter((product) => product.idTipo_fk === 5);
   };
 
   const filtrarProductosTipo1 = () => {
-    
-    return products.filter((product) => product.idTipo_fk === 1);
+    return products.filter((product) => product.idTipo_fk === 4);
   };
   const fetchProducts = async () => {
     try {
@@ -334,6 +338,11 @@ const Produccion = () => {
           <Column field="fechaProduccion" header="Fecha Producción"></Column>
           <Column field="cantProduccion" header="Cantidad"></Column>
           <Column
+            field="unidadProducto"
+            header="Unidad"
+            body={(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
+          ></Column>
+          <Column
             body={actionBodyTemplate}
             exportable={false}
             style={{ minWidth: "12rem" }}
@@ -362,7 +371,6 @@ const Produccion = () => {
               })
             }
             options={filtrarProductosTipo2()}
-            
             itemTemplate={(name) => <div>{name.nombProd}</div>}
             valueTemplate={(name) => {
               if (name) {
@@ -446,10 +454,18 @@ const Produccion = () => {
             />
             <Column field="cantidadUsada" header="Cantidad"></Column>
             <Column
+              field="unidadProducto"
+              header="Unidad"
+              body={(rowData) =>
+                obtenerUnidadProducto(rowData.idMateriaPrima_fk)
+              }
+            ></Column>
+            <Column
               body={detailActionBodyTemplate}
               exportable={false}
               style={{ minWidth: "8rem" }}
-            ></Column>
+            ></Column>       
+           
           </DataTable>
         </div>
       )}
@@ -491,14 +507,15 @@ const Produccion = () => {
             }
           />
         </div>
-        {/*Unidad de Medida*/}       
+        {/*Unidad de Medida*/}
 
         {newDetail && newDetail.product && newDetail.product.unidadProducto && (
           <div className="p-field">
             <label>Unidad de Medida: {newDetail.product.unidadProducto}</label>
-          </div>)}
+          </div>
+        )}
         {/*Unidad de Medida*/}
-      
+
         <Button
           label="Grabar"
           icon="pi pi-check"

@@ -45,6 +45,11 @@ const Pedido = () => {
     const sucursal = sucursales.find((suc) => suc.idSucursal === idSuc_fk);
     return sucursal ? sucursal.nombSucursal : 'Desconocido';
   };
+  const obtenerUnidadProducto = (idProd_fk) => {
+    const producto = products.find((prod) => prod.idProducto === idProd_fk);
+    if(!producto) return "Desconocido";
+    return producto ? producto.unidadProducto : "Desconocido";
+  };
 
   const fetchSucursales = async () => {
     try {
@@ -290,6 +295,11 @@ const Pedido = () => {
             body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
             />
             <Column field="cantidadPedido" header="Cantidad Pedida"></Column>
+            <Column 
+              field="unidadProducto" 
+              header="Unidad"
+              body = {(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
+            ></Column>
             <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
           </DataTable>
         </div>

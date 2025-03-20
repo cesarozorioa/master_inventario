@@ -77,6 +77,11 @@ const IngresoProductos = () => {
     );
     return tipoProd ? tipoProd.nombTipo : "Desconocido";
   };
+  const obtenerUnidadProducto = (idProd_fk) => {
+    const producto = productos.find((prod) => prod.idProducto === idProd_fk);
+    if(!producto) return "Desconocido";
+    return producto ? producto.unidadProducto : "Desconocido";
+  };
 
   const abrirModal = () => {
     setModalVisible(true);
@@ -282,6 +287,11 @@ const IngresoProductos = () => {
           body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
         />
         <Column field="cantIngreso" header="Cantidad" />
+        <Column 
+          field="unidadProducto" 
+          header="Unidad"
+          body={(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
+          />
         <Column field="fechaIngreso" header="Fecha de Ingreso" />
         <Column body={accionPlantilla} header="Acciones" />
       </DataTable>
