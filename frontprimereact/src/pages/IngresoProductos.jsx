@@ -85,8 +85,10 @@ const IngresoProductos = () => {
     return producto ? producto.unidadProducto : "Desconocido";
   };
   const buscarProducto = (event) => {
+
     const query = event.query.toLowerCase();
     const resultados = productos.filter((producto) =>
+      (producto.idTipo_fk === 4) || (producto.idTipo_fk === 6) &&
       producto.nombProd.toLowerCase().includes(query)
     );
     setFilteredProductos(resultados);

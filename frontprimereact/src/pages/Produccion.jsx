@@ -77,7 +77,32 @@ const Produccion = () => {
       console.error("Error fetching production details:", error);
     }
   };
-  //console.log("productions Details:xxxxxx ", productionDetails);
+  // registrar la produccion como ingreso
+  const registrarIngreso = async (producto, cantidad, fecha) => {
+    const nuevoIngreso = {
+      idProd_fk: producto.idProducto,
+      cantIngreso: cantidad,
+      fechaIngreso: fecha,
+    };
+  
+    try {
+      await axios.post("http://127.0.0.1:8000/api/v1/ingreso/", nuevoIngreso);
+      toast.current.show({
+        severity: "success",
+        summary: "Ingreso Registrado",
+        detail: "El ingreso del producto fue registrado automáticamente.",
+        life: 3000,
+      });
+    } catch (error) {
+      console.error("Error registrando el ingreso:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo registrar el ingreso automáticamente.",
+        life: 3000,
+      });
+    }
+  };
 
   const saveProduction = async () => {
     const newProduction1 = {
@@ -98,6 +123,13 @@ const Produccion = () => {
           newProduction1
         );
       }
+      // registrar el ingreso del producto
+      await registrarIngreso(
+        newProduction.product,
+        newProduction.quantity,
+        newProduction.production_date
+      );
+
       fetchProductions();
       setProductionDialog(false);
       setNewProduction({});
