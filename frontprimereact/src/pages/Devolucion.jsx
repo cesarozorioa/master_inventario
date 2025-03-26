@@ -26,7 +26,7 @@ const Devolucion = () => {
   const [tipoFiltro, setTipoFiltro] = useState(null); // Materia Prima, Producto Terminado, Producto Final
   const [editingDevolucion, setEditingDevolucion] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [tiposProducto, setTiposProducto] = useState([]);
+ const [tiposProducto, setTiposProducto] = useState([]);
 
   // Cargar productos y datos iniciales
   useEffect(() => {
@@ -53,20 +53,31 @@ const Devolucion = () => {
       .then((response) => setSucursales(response.data))
       .catch((error) => console.log(error));
   }, []);
+  console.log(tiposProducto);
 
   // Filtrar ingresos por tipo de producto
   const filtrarDevoluciones = () => {
-    console.log("filtrando por tipo de producto: ", tipoFiltro);
+    console.log("filtrando por tipo de producto codigo: ", tipoFiltro);
     if (tipoFiltro) {
-      return devoluciones.filter(
-        (devolucion) => devolucion.productos === tipoFiltro
-      );
+      const devolucionesFiltradas = devoluciones.filter(
+        (devolucion) => devolucion.idSuc_fk === tipoFiltro
+      );      
+      
+      return devolucionesFiltradas;
     }
+    
+    // Si no hay filtro, devolver todas las devoluciones
     return devoluciones;
+    // Si no hay filtro, devolver todos los ingresos
+    
   };
   const obtenerNombreProducto = (idProd_fk) => {
     const producto = productos.find((prod) => prod.idProducto === idProd_fk);
     return producto ? producto.nombProd : "Desconocido";
+  };
+  const obtenerNombreSucursal = (idSuc_fk) => {
+    const sucursal = sucursales.find((suc) => suc.idSucursal === idSuc_fk);
+    return sucursal ? sucursal.nombSucursal : "Desconocido";
   };
 
   const abrirModal = () => {
@@ -86,7 +97,7 @@ const Devolucion = () => {
       fechaDevolucion: fechaDevolucion.toISOString().slice(0, 10),
       motivoDevolucion: motivoDevolucion,
     };
-    console.log("nueva devolucion: ", nuevoDevolucion);
+    
     if (isEditing) {
       axios
         .put(
@@ -263,22 +274,33 @@ const Devolucion = () => {
   };
 
   const rightToolbarTemplate = () => {
-    return (
-      <div style={{ display: "flex", alignItems: "right" }}>
-        {tiposProducto.map((tipo) => (
-          <div key={tipo.idTipo} style={{ marginRight: "1rem" }}>
+      return (
+        <div style={{ display: "flex", alignItems: "right" }}>
+          <div style={{ marginRight: "1rem" }}>
             <RadioButton
-              value={tipo.nombTipo}
-              name="tipoProducto"
+              value={null}
+              name="tipoSucursal"
               onChange={(e) => setTipoFiltro(e.value)}
-              checked={tipo.nombTipo === tipoFiltro}
+              checked={tipoFiltro === null}
             />
-            <label style={{ marginLeft: "0.5rem" }}>{tipo.nombTipo}</label>
+            <label style={{ marginLeft: "0.5rem" }}>Todos</label>
           </div>
-        ))}
-      </div>
-    );
-  };
+  
+          {sucursales.map((sucursal) => (
+            <div key={sucursal.idSucursal} style={{ marginRight: "1rem" }}>
+              <RadioButton
+                value={sucursal.idSucursal}
+                name="tipoSucursal"
+                onChange={(e) => setTipoFiltro(e.value)}
+                checked={sucursal.idSucursal === tipoFiltro}
+              />
+              <label style={{ marginLeft: "0.5rem" }}>{sucursal.nombSucursal}</label>
+            </div>
+          ))}
+        </div>
+      );
+    };
+  
 
   return (
     <div>
@@ -293,7 +315,10 @@ const Devolucion = () => {
         <Column field="cantDevuelta" header="Cantidad" />
         <Column field="fechaDevolucion" header="Fecha de Ingreso" />
         <Column field="motivoDevolucion" header="Motivo" />
-        <Column field="idSuc_fk" header="Sucursal" />
+        <Column 
+        field="idSuc_fk" header="Sucursal" 
+        body={(rowData) => obtenerNombreSucursal(rowData.idSuc_fk)}
+        />
         <Column body={accionPlantilla} header="Acciones" />
       </DataTable>
 

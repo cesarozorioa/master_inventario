@@ -68,7 +68,7 @@ class DevolucionesSerializer(serializers.ModelSerializer):     #idSuc_fk = seria
     def to_representation(self, instance):
         rep = super().to_representation(instance)
         #rep['idProd_fk'] = instance.idProd_fk.nombProd 
-        rep['idSuc_fk'] = instance.idSuc_fk.nombSucursal    
+        #rep['idSuc_fk'] = instance.idSuc_fk.nombSucursal    
         return rep   
     
     class Meta:
