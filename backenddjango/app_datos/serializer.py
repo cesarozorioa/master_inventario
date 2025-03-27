@@ -113,6 +113,13 @@ class IngresoSerializer(serializers.ModelSerializer):    #idProd_fk = ProductoSe
         model = Ingreso
         fields = '__all__'
 
+class EgresoSerializer(serializers.ModelSerializer):    #idProd_fk = ProductoSerializer()    
+    #idProd_fk = serializers.StringRelatedField()
+    
+    class Meta:
+        model = Egreso
+        fields = '__all__'
+
 class DespachoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Despacho

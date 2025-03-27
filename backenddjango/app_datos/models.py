@@ -57,6 +57,15 @@ class Ingreso(models.Model):
         db_table = 'ingreso'
     def __str__(self):
         return str(self.idIngreso)
+class Egreso(models.Model):
+    idEgreso = models.AutoField(primary_key=True)
+    idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantEgreso = models.IntegerField(null=False,blank=False)
+    fechaEgreso = models.DateField(null=False,blank=False)
+    class Meta:        
+        db_table = 'egreso'
+    def __str__(self):
+        return str(self.idEgreso)
     
 class Pedido(models.Model):
     idPedido = models.AutoField(primary_key=True)         

@@ -25,6 +25,11 @@ class ProductoViewSet(viewsets.ModelViewSet):
     serializer_class = ProductoSerializer
     queryset = Producto.objects.all()
 
+class EgresoViewSet(viewsets.ModelViewSet):
+    serializer_class = EgresoSerializer
+    queryset = Egreso.objects.all()
+    
+
 class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = PedidoSerializer
     queryset = Pedido.objects.all()

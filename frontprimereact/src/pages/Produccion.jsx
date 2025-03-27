@@ -104,6 +104,33 @@ const Produccion = () => {
     }
   };
 
+  // registrar el egreso de productos
+  const registrarEgreso = async (producto, cantidad, fecha) => {
+    const nuevoEgreso = {
+      idProd_fk: producto.idProducto,
+      cantEgreso: cantidad,
+      fechaEgreso: fecha,
+    };
+  
+    try {
+      await axios.post("http://127.0.0.1:8000/api/v1/egreso/", nuevoEgreso);
+      toast.current.show({
+        severity: "success",
+        summary: "Egreso Registrado",
+        detail: "El egreso del producto fue registrado automáticamente.",
+        life: 3000,
+      });
+    } catch (error) {
+      console.error("Error registrando el egreso:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo registrar el egreso automáticamente.",
+        life: 3000,
+      });
+    }
+  };
+
   const saveProduction = async () => {
     const newProduction1 = {
       idProd_fk: newProduction.product.idProducto,
@@ -175,6 +202,13 @@ const Produccion = () => {
           "http://127.0.0.1:8000/api/v1/detalle_produccion/",
           newDetail1
         );
+        // Registrar automaticamente el egreso de materia prima
+        await registrarEgreso(
+          newDetail.product,
+          newDetail.quantity,
+          new Date().toISOString().slice(0, 10) // Fecha actual
+        );
+
         toast.current.show({
           severity: "success",
           summary: "Success",

@@ -26,6 +26,8 @@ router.register(r'detalle_produccion', views.DetalleProduccionViewSet, 'detalle_
 
 router.register(r'ingreso', views.IngresoViewSet, 'ingreso')
 
+router.register(r'egreso', views.EgresoViewSet, 'egreso')
+
 router.register(r'despacho', views.DespachoViewSet, 'despacho')
 
 

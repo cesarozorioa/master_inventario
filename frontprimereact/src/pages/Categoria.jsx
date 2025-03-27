@@ -177,7 +177,7 @@ const Categoria = () => {
               className="p-inputtext uppercase"
             />
           </div>
-          <div className="flex inline gap-3 mt-3">
+          <div className="flex gap-3 mt-3">
             <Button
               label="Cancelar"
               icon="pi pi-times"
