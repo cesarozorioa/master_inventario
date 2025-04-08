@@ -154,9 +154,9 @@ const Pedido = () => {
         await registrarEgreso(
           newDetail.product,
           newDetail.quantity,
-          newDetail.pedido_date || new Date().toISOString().slice(0, 10) // Fecha actual
+          //newDetail.pedido_date || new Date().toISOString().slice(0, 10) // Fecha actual
           //new Date().toISOString().slice(0, 10) // Fecha actual
-          //selectedPedido.pedido_date // Fecha del pedido
+          selectedPedido.pedido_date // Fecha del pedido
            // Fecha del pedido
         );
         
@@ -210,27 +210,21 @@ const Pedido = () => {
   };
 
   const editPedido = (pedido) => {
-    console.log("en edit pedido: ", pedido)
-    
-    let pro
-    setSelectedPedido(pedido);
-    const { idSucural_fk: p }=pedido;
-    console.log ("p: ", p);
-    sucursales.map((suc) => {
-      if(suc.nombSucursal===p)
-           pro=suc.idSucursal
-             
-    })
-    
+    setSelectedPedido({
+      ...pedido,
+      pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
+    });
+  
     setNewPedido({
       id: pedido.idPedido,
-      sucursal: pro,      
-      pedido_date: pedido.fechaPedido
+      sucursal: pedido.idSucursal_fk,
+      pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
     });
-    //agregado
+  
     fetchPedidoDetails(pedido.idPedido);
     setPedidoDialog(true);
   };
+  
 
   const editPedidoDetail = (detail) => {
     
@@ -264,11 +258,13 @@ const Pedido = () => {
     );
   };
 // 
-  const selectPedido = (pedido) => {
-    
-    setSelectedPedido(pedido);
-    fetchPedidoDetails(pedido.idPedido);
-  };
+const selectPedido = (pedido) => {
+  setSelectedPedido({
+    ...pedido,
+    pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
+  });
+  fetchPedidoDetails(pedido.idPedido);
+};
 
   return (
     <div>
