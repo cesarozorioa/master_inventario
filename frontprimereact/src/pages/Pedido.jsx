@@ -79,15 +79,14 @@ const Pedido = () => {
       
     }
     
-  };   
+  };
+  
 
   const savePedido = async () => {
-    console.log("newPedido en saveProduction: ",newPedido );
-    
+    console.log("newPedido en saveProduction: ",newPedido );    
     const newPedido1 = {
       idSucursal_fk:newPedido.sucursal.idSucursal,
-      fechaPedido: newPedido.pedido_date,
-      
+      fechaPedido: newPedido.pedido_date,      
     }
    
     try {
@@ -105,6 +104,32 @@ const Pedido = () => {
       toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al grabar el pedido', life: 3000 });
     }
   };
+  const registrarEgreso = async (producto, cantidad, fecha) => {
+    
+    const nuevoEgreso = {
+      idProd_fk: producto.idProducto,
+      cantEgreso: cantidad,
+      fechaEgreso: fecha,
+    };
+  
+    try {
+      await axios.post("http://127.0.0.1:8000/api/v1/egreso/", nuevoEgreso);
+      toast.current.show({
+        severity: "success",
+        summary: "Egreso Registrado",
+        detail: "El egreso del producto fue registrado automáticamente.",
+        life: 3000,
+      });
+    } catch (error) {      
+      console.error("Error registrando el egreso:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo registrar el egreso automáticamente.",
+        life: 3000,
+      });
+    }
+  };
 
   const savePedidoDetail = async () => {
    
@@ -112,7 +137,7 @@ const Pedido = () => {
       //id:newDetail.id,
       idPed_fk:selectedPedido.idPedido,
       cantidadPedido: newDetail.quantity,
-      idProd_fk:newDetail.product.idProducto
+      idProd_fk:newDetail.product.idProducto      
     }
    
     try {
@@ -124,7 +149,16 @@ const Pedido = () => {
       } else if (newDetail.product.stock >= newDetail.quantity) {
         
         await axios.post('http://127.0.0.1:8000/api/v1/detalle_pedido/', newDetail1);
-        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 }); 
+        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 });
+
+        await registrarEgreso(
+          newDetail.product,
+          newDetail.quantity,
+          newDetail.pedido_date || new Date().toISOString().slice(0, 10) // Fecha actual
+          //new Date().toISOString().slice(0, 10) // Fecha actual
+          //selectedPedido.pedido_date // Fecha del pedido
+           // Fecha del pedido
+        );
         
       }else{
         toast.current.show({ severity: 'error', summary: 'Error', detail: 'No hay suficiente stock', life: 3000 });
@@ -229,7 +263,7 @@ const Pedido = () => {
       </>
     );
   };
-
+// 
   const selectPedido = (pedido) => {
     
     setSelectedPedido(pedido);
