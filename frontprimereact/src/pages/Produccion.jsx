@@ -7,6 +7,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
+import { useUserContext } from "../utils/UserContext"
 import axios from "axios";
 
 const Produccion = () => {
@@ -19,6 +20,7 @@ const Produccion = () => {
   const [newProduction, setNewProduction] = useState({});
   const [newDetail, setNewDetail] = useState({});
   const toast = useRef(null);
+  const { userNamebd } = useUserContext();
 
   useEffect(() => {
     fetchProducts();
@@ -83,6 +85,7 @@ const Produccion = () => {
       idProd_fk: producto.idProducto,
       cantIngreso: cantidad,
       fechaIngreso: fecha,
+      usuarioIngreso: userNamebd,
     };
   
     try {
@@ -110,6 +113,7 @@ const Produccion = () => {
       idProd_fk: producto.idProducto,
       cantEgreso: cantidad,
       fechaEgreso: fecha,
+      usuarioEgreso: userNamebd,
     };
   
     try {
@@ -154,7 +158,7 @@ const Produccion = () => {
       await registrarIngreso(
         newProduction.product,
         newProduction.quantity,
-        newProduction.production_date
+        newProduction.production_date,        
       );
 
       fetchProductions();

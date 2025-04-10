@@ -11,6 +11,7 @@ import { RadioButton } from "primereact/radiobutton";
 import { InputNumber } from "primereact/inputnumber";
 import { Toolbar } from "primereact/toolbar";
 import { AutoComplete } from "primereact/autocomplete";
+import { useUserContext } from "../utils/UserContext"
 import axios from "axios";
 
 const IngresoProductos = () => {
@@ -25,6 +26,7 @@ const IngresoProductos = () => {
   const [editingIngreso, setEditingIngreso] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tiposProducto, setTiposProducto] = useState([]);
+  const { userNamebd } = useUserContext();
 
   // Cargar productos y datos iniciales
   useEffect(() => {
@@ -108,6 +110,7 @@ const IngresoProductos = () => {
       idProd_fk: parseInt(selectedProducto.idProducto),
       cantIngreso: cantidad,
       fechaIngreso: fechaIngreso.toISOString().slice(0, 10),
+      usuarioIngreso: userNamebd,
     };
 
     if (isEditing) {

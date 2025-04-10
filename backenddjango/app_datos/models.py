@@ -53,6 +53,7 @@ class Ingreso(models.Model):
     idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantIngreso = models.IntegerField(null=False,blank=False)
     fechaIngreso = models.DateField(null=False,blank=False)
+    usuarioIngreso = models.CharField(max_length=25,null=False,blank=True)
     class Meta:        
         db_table = 'ingreso'
     def __str__(self):
@@ -62,6 +63,8 @@ class Egreso(models.Model):
     idProd_fk = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantEgreso = models.IntegerField(null=False,blank=False)
     fechaEgreso = models.DateField(null=False,blank=False)
+    usuarioEgreso = models.CharField(max_length=25,null=False,blank=True)
+
     class Meta:        
         db_table = 'egreso'
     def __str__(self):

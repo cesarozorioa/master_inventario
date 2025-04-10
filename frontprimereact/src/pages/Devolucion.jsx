@@ -67,8 +67,7 @@ const Devolucion = () => {
     }
     
     // Si no hay filtro, devolver todas las devoluciones
-    return devoluciones;
-    // Si no hay filtro, devolver todos los ingresos
+    return devoluciones;    
     
   };
   const obtenerNombreProducto = (idProd_fk) => {
@@ -201,7 +200,6 @@ const Devolucion = () => {
           placeholder="Seleccione Producto"
           optionLabel="nombre"
         />
-
         <Dropdown
           options={sucursales}
           value={selectedSucursal}

@@ -1,13 +1,14 @@
-import  { useState, useEffect, useRef } from 'react';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import { InputNumber } from 'primereact/inputnumber';
-import { Calendar } from 'primereact/calendar';
-import { Dropdown } from 'primereact/dropdown';
-import { Toast } from 'primereact/toast';
-import axios from 'axios';
+import { useState, useEffect, useRef } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import { InputNumber } from "primereact/inputnumber";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast";
+import { useUserContext } from "../utils/UserContext";
+import axios from "axios";
 
 const Pedido = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -19,6 +20,7 @@ const Pedido = () => {
   const [newPedido, setNewPedido] = useState({});
   const [newDetail, setNewDetail] = useState({});
   const [sucursales, setSucursales] = useState([]);
+  const { userNamebd } = useUserContext();
   const toast = useRef(null);
 
   useEffect(() => {
@@ -29,89 +31,104 @@ const Pedido = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/producto/');
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/producto/"
+      );
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error fetching products:", error);
     }
   };
 
-  const obtenerNombreProducto = (idProd_fk) => {    
+  const obtenerNombreProducto = (idProd_fk) => {
     const producto = products.find((prod) => prod.idProducto === idProd_fk);
-    console.log("producto: ",producto)
-    return producto ? producto.nombProd : 'Desconocido';
+    console.log("producto: ", producto);
+    return producto ? producto.nombProd : "Desconocido";
   };
-  const obtenerNombreSucursal = (idSuc_fk) => {    
+  const obtenerNombreSucursal = (idSuc_fk) => {
     const sucursal = sucursales.find((suc) => suc.idSucursal === idSuc_fk);
-    return sucursal ? sucursal.nombSucursal : 'Desconocido';
+    return sucursal ? sucursal.nombSucursal : "Desconocido";
   };
   const obtenerUnidadProducto = (idProd_fk) => {
     const producto = products.find((prod) => prod.idProducto === idProd_fk);
-    if(!producto) return "Desconocido";
+    if (!producto) return "Desconocido";
     return producto ? producto.unidadProducto : "Desconocido";
   };
 
   const fetchSucursales = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/sucursal/');
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/v1/sucursal/"
+      );
       setSucursales(response.data);
     } catch (error) {
-      console.error('Error fetching sucursales:', error);}
+      console.error("Error fetching sucursales:", error);
     }
+  };
 
   const fetchPedidos = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/v1/pedido/');
+      const response = await axios.get("http://localhost:8000/api/v1/pedido/");
       setPedidos(response.data);
     } catch (error) {
-      console.error('Error fetching pedidos:', error);
+      console.error("Error fetching pedidos:", error);
     }
   };
 
-  const fetchPedidoDetails = async (pedidoId) => {      
-    
-    try {      
-      
-      const response = await axios.get(`http://127.0.0.1:8000/api/v1/detalle_pedido/?idPed_fk=${pedidoId}`);
-      setPedidoDetails(response.data);        
+  const fetchPedidoDetails = async (pedidoId) => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/detalle_pedido/?idPed_fk=${pedidoId}`
+      );
+      setPedidoDetails(response.data);
     } catch (error) {
-      console.error('Error fetching production details:', error);
-      
+      console.error("Error fetching production details:", error);
     }
-    
   };
-  
 
   const savePedido = async () => {
-    console.log("newPedido en saveProduction: ",newPedido );    
+    console.log("newPedido en saveProduction: ", newPedido);
     const newPedido1 = {
-      idSucursal_fk:newPedido.sucursal.idSucursal,
-      fechaPedido: newPedido.pedido_date,      
-    }
-   
+      idSucursal_fk: newPedido.sucursal.idSucursal,
+      fechaPedido: newPedido.pedido_date,
+    };
+
     try {
       if (selectedPedido) {
-        await axios.put(`http://localhost:8000/api/v1/pedido/${selectedPedido.idPedido}/`, newPedido1);
+        await axios.put(
+          `http://localhost:8000/api/v1/pedido/${selectedPedido.idPedido}/`,
+          newPedido1
+        );
       } else {
-        await axios.post('http://localhost:8000/api/v1/pedido/', newPedido1);
+        await axios.post("http://localhost:8000/api/v1/pedido/", newPedido1);
       }
       fetchPedidos();
       setPedidoDialog(false);
       setNewPedido({});
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 });
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Pedido Guardado",
+        life: 3000,
+      });
     } catch (error) {
-      console.error('Error al grabar el pedido:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error al grabar el pedido', life: 3000 });
+      console.error("Error al grabar el pedido:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error al grabar el pedido",
+        life: 3000,
+      });
     }
   };
   const registrarEgreso = async (producto, cantidad, fecha) => {
-    
     const nuevoEgreso = {
       idProd_fk: producto.idProducto,
       cantEgreso: cantidad,
       fechaEgreso: fecha,
+      usuarioEgreso: userNamebd,
     };
-  
+
     try {
       await axios.post("http://127.0.0.1:8000/api/v1/egreso/", nuevoEgreso);
       toast.current.show({
@@ -120,7 +137,7 @@ const Pedido = () => {
         detail: "El egreso del producto fue registrado automáticamente.",
         life: 3000,
       });
-    } catch (error) {      
+    } catch (error) {
       console.error("Error registrando el egreso:", error);
       toast.current.show({
         severity: "error",
@@ -130,26 +147,90 @@ const Pedido = () => {
       });
     }
   };
+  const actualizarEgreso = async (detail) => {
+    
+    const egresoActualizado = {
+      idProd_fk: detail.product.idProducto,
+      cantEgreso: detail.quantity,
+      fechaEgreso: selectedPedido.pedido_date, // Usar la fecha del pedido
+      usuarioEgreso: userNamebd,
+    };
+
+    try {
+      // Verificar si el egreso ya existe
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/egreso/?idProd_fk=${detail.product.idProducto}&fechaEgreso=${selectedPedido.pedido_date}`
+      );
+
+      if (response.data.length > 0) {
+        // Si el egreso existe, actualizarlo
+        const egresoId = response.data[0].idEgreso;
+        await axios.put(
+          `http://127.0.0.1:8000/api/v1/egreso/${egresoId}/`,
+          egresoActualizado
+        );
+        toast.current.show({
+          severity: "success",
+          summary: "Egreso Actualizado",
+          detail: "El egreso fue actualizado correctamente.",
+          life: 3000,
+        });
+      } else {
+        // Si el egreso no existe, crearlo
+        await axios.post(
+          "http://127.0.0.1:8000/api/v1/egreso/",
+          egresoActualizado
+        );
+        toast.current.show({
+          severity: "success",
+          summary: "Egreso Registrado",
+          detail: "El egreso fue registrado correctamente.",
+          life: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error actualizando el egreso:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "No se pudo actualizar el egreso.",
+        life: 3000,
+      });
+    }
+  };
 
   const savePedidoDetail = async () => {
-   
     const newDetail1 = {
       //id:newDetail.id,
-      idPed_fk:selectedPedido.idPedido,
+      idPed_fk: selectedPedido.idPedido,
       cantidadPedido: newDetail.quantity,
-      idProd_fk:newDetail.product.idProducto      
-    }
-   
+      idProd_fk: newDetail.product.idProducto,
+    };
+
     try {
-      
-      if (newDetail.id) {    
-            
-        await axios.put(`http://127.0.0.1:8000/api/v1/detalle_pedido/${newDetail.id}/`,newDetail1);
-        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Actualizado', life: 3000 });
+      if (newDetail.id) {
+        await axios.put(
+          `http://127.0.0.1:8000/api/v1/detalle_pedido/${newDetail.id}/`,
+          newDetail1
+        );
+        await actualizarEgreso(newDetail); // Actualizar el egreso relacionado
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Pedido Actualizado",
+          life: 3000,
+        });
       } else if (newDetail.product.stock >= newDetail.quantity) {
-        
-        await axios.post('http://127.0.0.1:8000/api/v1/detalle_pedido/', newDetail1);
-        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido Guardado', life: 3000 });
+        await axios.post(
+          "http://127.0.0.1:8000/api/v1/detalle_pedido/",
+          newDetail1
+        );
+        toast.current.show({
+          severity: "success",
+          summary: "Success",
+          detail: "Pedido Guardado",
+          life: 3000,
+        });
 
         await registrarEgreso(
           newDetail.product,
@@ -157,44 +238,76 @@ const Pedido = () => {
           //newDetail.pedido_date || new Date().toISOString().slice(0, 10) // Fecha actual
           //new Date().toISOString().slice(0, 10) // Fecha actual
           selectedPedido.pedido_date // Fecha del pedido
-           // Fecha del pedido
+          // Fecha del pedido
         );
-        
-      }else{
-        toast.current.show({ severity: 'error', summary: 'Error', detail: 'No hay suficiente stock', life: 3000 });
+      } else {
+        toast.current.show({
+          severity: "error",
+          summary: "Error",
+          detail: "No hay suficiente stock",
+          life: 3000,
+        });
       }
       fetchPedidoDetails(selectedPedido.idPedido);
       setDetailDialog(false);
-      setNewDetail({}); 
-        
+      setNewDetail({});
     } catch (error) {
-      console.error('Error al grabar el detalle del pedido:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error en el detalle del pedido', life: 3000 });
+      console.error("Error al grabar el detalle del pedido:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error en el detalle del pedido",
+        life: 3000,
+      });
     }
   };
 
   const deletePedido = async (pedido) => {
     try {
-      await axios.delete(`http://localhost:8000/api/v1/pedido/${pedido.idPedido}/`);
+      await axios.delete(
+        `http://localhost:8000/api/v1/pedido/${pedido.idPedido}/`
+      );
       fetchPedidos();
       setSelectedPedido(null);
       setPedidoDetails([]);
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido borrado', life: 3000 });
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Pedido borrado",
+        life: 3000,
+      });
     } catch (error) {
-      console.error('Error pedido borrado:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error pedido borrado', life: 3000 });
+      console.error("Error pedido borrado:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error pedido borrado",
+        life: 3000,
+      });
     }
   };
 
   const deletePedidoDetail = async (detail) => {
-    console.log("en delete el detalle: ", detail)
+    console.log("en delete el detalle: ", detail);
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/v1/detalle_pedido/${detail.idDetalleP}/`);
+      await axios.delete(
+        `http://127.0.0.1:8000/api/v1/detalle_pedido/${detail.idDetalleP}/`
+      );
       fetchPedidoDetails(selectedPedido.idPedido);
-      toast.current.show({ severity: 'success', summary: 'Success', detail: 'Pedido detail deleted', life: 3000 });
+      toast.current.show({
+        severity: "success",
+        summary: "Success",
+        detail: "Pedido detail deleted",
+        life: 3000,
+      });
     } catch (error) {
-      console.error('Error deleting pedido detail:', error);
-      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error borrando el detalle del pedido', life: 3000 });
+      console.error("Error deleting pedido detail:", error);
+      toast.current.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Error borrando el detalle del pedido",
+        life: 3000,
+      });
     }
   };
 
@@ -214,37 +327,47 @@ const Pedido = () => {
       ...pedido,
       pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
     });
-  
+
     setNewPedido({
       id: pedido.idPedido,
       sucursal: pedido.idSucursal_fk,
       pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
     });
-  
+
     fetchPedidoDetails(pedido.idPedido);
     setPedidoDialog(true);
   };
-  
 
-  const editPedidoDetail = (detail) => {
-    
-   
+  const editPedidoDetail =  (detail) => {
     setNewDetail({
       id: detail.idDetalleP,
       pedido: detail.idPed_fk,
       product: detail.idProd_fk,
-      quantity: detail.cantidadPedido
+      quantity: detail.cantidadPedido,
     });
-    
+
     setDetailDialog(true);
+    // Actualizar el egreso relacionado con el detalle del pedido
     
   };
   const actionBodyTemplate = (rowData) => {
     return (
       <>
-        <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editPedido(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mr-2" onClick={() => deletePedido(rowData)} />
-        <Button icon="pi pi-list" className="p-button-rounded p-button-info mr-2" onClick={() => selectPedido(rowData)} />
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success mr-2"
+          onClick={() => editPedido(rowData)}
+        />
+        <Button
+          icon="pi pi-trash"
+          className="p-button-rounded p-button-warning mr-2"
+          onClick={() => deletePedido(rowData)}
+        />
+        <Button
+          icon="pi pi-list"
+          className="p-button-rounded p-button-info mr-2"
+          onClick={() => selectPedido(rowData)}
+        />
       </>
     );
   };
@@ -252,118 +375,205 @@ const Pedido = () => {
   const detailActionBodyTemplate = (rowData) => {
     return (
       <>
-        <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editPedidoDetail(rowData)} />
-        <Button icon="pi pi-trash" className="p-button-rounded p-button-warning" onClick={() => deletePedidoDetail(rowData)} />
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-rounded p-button-success mr-2"
+          onClick={() => editPedidoDetail(rowData)}
+        />
+        <Button
+          icon="pi pi-trash"
+          className="p-button-rounded p-button-warning"
+          onClick={() => deletePedidoDetail(rowData)}
+        />
       </>
     );
   };
-// 
-const selectPedido = (pedido) => {
-  setSelectedPedido({
-    ...pedido,
-    pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
-  });
-  fetchPedidoDetails(pedido.idPedido);
-};
+  //
+  const selectPedido = (pedido) => {
+    setSelectedPedido({
+      ...pedido,
+      pedido_date: pedido.fechaPedido, // Asignar la fecha del pedido
+    });
+    fetchPedidoDetails(pedido.idPedido);
+  };
 
   return (
     <div>
       <Toast ref={toast} />
-      
+
       <div className="card">
         <h1>Ingreso de Pedidos</h1>
-        <Button label="Nuevo Pedido" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-        
-        <DataTable value={pedidos} responsiveLayout="scroll" paginator rows={5} >
+        <Button
+          label="Nuevo Pedido"
+          icon="pi pi-plus"
+          className="p-button-success mr-2"
+          onClick={openNew}
+        />
+
+        <DataTable value={pedidos} responsiveLayout="scroll" paginator rows={5}>
           <Column field="idPedido" header="ID"></Column>
-          <Column field="idSucursal_fk" header="Sucursal" 
-           body={(rowData) => obtenerNombreSucursal(rowData.idSucursal_fk)}
+          <Column
+            field="idSucursal_fk"
+            header="Sucursal"
+            body={(rowData) => obtenerNombreSucursal(rowData.idSucursal_fk)}
           ></Column>
-          
-          <Column field="fechaPedido" header="Fecha"></Column>         
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+
+          <Column field="fechaPedido" header="Fecha"></Column>
+          <Column
+            body={actionBodyTemplate}
+            exportable={false}
+            style={{ minWidth: "12rem" }}
+          ></Column>
         </DataTable>
       </div>
 
-      <Dialog visible={pedidoDialog} style={{ width: '450px' }} header="Sucursal" modal className="p-fluid" onHide={() => setPedidoDialog(false)}>
+      <Dialog
+        visible={pedidoDialog}
+        style={{ width: "450px" }}
+        header="Sucursal"
+        modal
+        className="p-fluid"
+        onHide={() => setPedidoDialog(false)}
+      >
         <div className="field">
           <label htmlFor="sucursal">Sucursal</label>
-          <Dropdown id="sucursal" value={newPedido.sucursal || newPedido.nombSucursal}
-
-          onChange={(e) => setNewPedido({ ...newPedido, sucursal: e.value })}
-          options={sucursales}
-          itemTemplate={(name) => <div>{name.nombSucursal}</div>}
-          valueTemplate={(name) => {
-            if(name){
-
-              return <div>{name.nombSucursal}</div>
-          }
-          else{
-              return <div>Seleccione Sucursal</div>
-          }}}
-          optionLabel="name" 
-          optionValue="id" 
-          placeholder="Seleccione Sucursal" />
+          <Dropdown
+            id="sucursal"
+            value={newPedido.sucursal || newPedido.nombSucursal}
+            onChange={(e) => setNewPedido({ ...newPedido, sucursal: e.value })}
+            options={sucursales}
+            itemTemplate={(name) => <div>{name.nombSucursal}</div>}
+            valueTemplate={(name) => {
+              if (name) {
+                return <div>{name.nombSucursal}</div>;
+              } else {
+                return <div>Seleccione Sucursal</div>;
+              }
+            }}
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleccione Sucursal"
+          />
         </div>
         <div className="field">
           <label htmlFor="pedido_date">Fecha Pedido</label>
-          <Calendar id="pedido_date" value={new Date(newPedido.pedido_date)} 
-          onChange={(e) => setNewPedido({ ...newPedido, pedido_date: e.value.toISOString().slice(0, 10) })} showIcon />
+          <Calendar
+            id="pedido_date"
+            value={new Date(newPedido.pedido_date)}
+            onChange={(e) =>
+              setNewPedido({
+                ...newPedido,
+                pedido_date: e.value.toISOString().slice(0, 10),
+              })
+            }
+            showIcon
+          />
         </div>
-       
-        <Button label="Save" icon="pi pi-check" className="p-button-success mt-3 centered" onClick={savePedido} />
+
+        <Button
+          label="Save"
+          icon="pi pi-check"
+          className="p-button-success mt-3 centered"
+          onClick={savePedido}
+        />
       </Dialog>
 
       {selectedPedido && (
         <div className="card mt-4">
           <h2> Detalles del Pedido #{selectedPedido.idPedido}</h2>
-          <Button label="Productos" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNewDetail} />
-          
-          <DataTable value={pedidoDetails} showGridlines tableStyle={{ minWidth: '50rem' }} scrollable scrollHeight="400px"  >
+          <Button
+            label="Productos"
+            icon="pi pi-plus"
+            className="p-button-success mr-2"
+            onClick={openNewDetail}
+          />
+
+          <DataTable
+            value={pedidoDetails}
+            showGridlines
+            tableStyle={{ minWidth: "50rem" }}
+            scrollable
+            scrollHeight="400px"
+          >
             <Column field="idPed_fk" header="PEDIDO"></Column>
-            <Column field="idProd_fk" header="Producto Pedido"
-            body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
+            <Column
+              field="idProd_fk"
+              header="Producto Pedido"
+              body={(rowData) => obtenerNombreProducto(rowData.idProd_fk)}
             />
             <Column field="cantidadPedido" header="Cantidad Pedida"></Column>
-            <Column 
-              field="unidadProducto" 
+            <Column
+              field="unidadProducto"
               header="Unidad"
-              body = {(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
+              body={(rowData) => obtenerUnidadProducto(rowData.idProd_fk)}
             ></Column>
-            <Column body={detailActionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
+            <Column
+              body={detailActionBodyTemplate}
+              exportable={false}
+              style={{ minWidth: "8rem" }}
+            ></Column>
           </DataTable>
         </div>
       )}
 
-      <Dialog visible={detailDialog} style={{ width: '450px' }} header="Detalle Productos" modal className="p-fluid" onHide={() => setDetailDialog(false)}>
+      <Dialog
+        visible={detailDialog}
+        style={{ width: "450px" }}
+        header="Detalle Productos"
+        modal
+        className="p-fluid"
+        onHide={() => setDetailDialog(false)}
+      >
         <div className="field">
           <label htmlFor="product">Productos Pedidos</label>
-          <Dropdown id="product" 
-          value={newDetail.product || newDetail.nombProd}       
-          itemTemplate={(name) => <div>{name.nombProd}</div>}
-          valueTemplate={(name) => {
-            if(name){
-              return <div>{name.nombProd}</div>
-          }
-          else{
-              return <div>Seleccione Producto</div>
-          }}}
-          onChange={(e) => setNewDetail({ ...newDetail, product: e.value, unidadProducto: e.value.unidadProducto })} options={products} optionLabel="name" placeholder="Seleccione Producto" />
+          <Dropdown
+            id="product"
+            value={newDetail.product || newDetail.nombProd}
+            itemTemplate={(name) => <div>{name.nombProd}</div>}
+            valueTemplate={(name) => {
+              if (name) {
+                return <div>{name.nombProd}</div>;
+              } else {
+                return <div>Seleccione Producto</div>;
+              }
+            }}
+            onChange={(e) =>
+              setNewDetail({
+                ...newDetail,
+                product: e.value,
+                unidadProducto: e.value.unidadProducto,
+              })
+            }
+            options={products}
+            optionLabel="name"
+            placeholder="Seleccione Producto"
+          />
         </div>
-        {console.log("newDetail.product: ",newDetail.product)}
-        {console.log("Unidad de Medida: ",newDetail.unidadProducto)}
+        {console.log("newDetail.product: ", newDetail.product)}
+        {console.log("Unidad de Medida: ", newDetail.unidadProducto)}
         <div className="field">
           <label htmlFor="quantity">Cantidad Pedida</label>
-          <InputNumber id="quantity" value={newDetail.quantity} onValueChange={(e) => setNewDetail({ ...newDetail, quantity: e.value })} />
+          <InputNumber
+            id="quantity"
+            value={newDetail.quantity}
+            onValueChange={(e) =>
+              setNewDetail({ ...newDetail, quantity: e.value })
+            }
+          />
         </div>
         {/*Unidad de Medida*/}
-      {newDetail && (
-        <div className="p-field">
-          <label>Unidad de Medida: {newDetail.unidadProducto}</label>
-        </div>
-      )}
-      {/*Unidad de Medida*/}
-        <Button label="Guardar" icon="pi pi-check" className="p-button-success mt-3 centered" onClick={savePedidoDetail} />
+        {newDetail && (
+          <div className="p-field">
+            <label>Unidad de Medida: {newDetail.unidadProducto}</label>
+          </div>
+        )}
+        {/*Unidad de Medida*/}
+        <Button
+          label="Guardar"
+          icon="pi pi-check"
+          className="p-button-success mt-3 centered"
+          onClick={savePedidoDetail}
+        />
       </Dialog>
     </div>
   );
